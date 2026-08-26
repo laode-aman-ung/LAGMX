@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 pdbfixer-venv/
+.pytest_cache/
 
 # Legacy / large run directories (not part of the software repo;
 # run_matrix/ is the maintained, version-controlled test matrix)
