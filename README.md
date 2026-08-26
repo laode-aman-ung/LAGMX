@@ -155,7 +155,15 @@ If you use pyAutoGMX, please also cite the tools it wraps:
 
 MIT -- see [LICENSE](LICENSE).
 
-## Author
+## Authors
 
-La Ode Aman, Department of Pharmacy, Faculty of Sport and Health,
-Universitas Negeri Gorontalo.
+La Ode Aman<sup>1</sup>, Arfan<sup>2</sup>, Aiyi Asnawi<sup>3</sup>,
+Netty Ino Ischak<sup>4</sup>, Dizky Ramadani Putri Papeo<sup>1</sup>,
+Hamsidar Hasan<sup>1</sup>, A. Mu'thi Andy Suryadi<sup>1</sup>
+
+1. Department of Pharmacy, Faculty of Sports and Health, Universitas Negeri Gorontalo, Indonesia
+2. Faculty of Pharmacy, Universitas Halu Oleo, Kendari, Southeast Sulawesi, Indonesia
+3. Faculty of Pharmacy, Universitas Bhakti Kencana, Bandung, West Java, Indonesia
+4. Department of Chemistry, Faculty of Mathematics and Natural Sciences, Universitas Negeri Gorontalo, Indonesia
+
+Corresponding author: La Ode Aman (laode_aman@ung.ac.id)

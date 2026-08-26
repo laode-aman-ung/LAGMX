@@ -9,11 +9,35 @@ tags:
   - structural bioinformatics
 authors:
   - name: La Ode Aman
-    # orcid: 0000-0000-0000-0000   # TODO: add ORCID before submission
+    affiliation: 1
+    corresponding: true
+  - name: Arfan
+    orcid: 0000-0003-3004-7101
+    affiliation: 2
+  - name: Aiyi Asnawi
+    orcid: 0000-0002-8179-0520
+    affiliation: 3
+  - name: Netty Ino Ischak
+    orcid: 0000-0002-7693-8842
+    affiliation: 4
+  - name: Dizky Ramadani Putri Papeo
+    orcid: 0009-0001-3842-4189
+    affiliation: 1
+  - name: Hamsidar Hasan
+    orcid: 0000-0003-0148-5233
+    affiliation: 1
+  - name: A. Mu'thi Andy Suryadi
+    orcid: 0000-0002-7367-5661
     affiliation: 1
 affiliations:
-  - name: Department of Pharmacy, Faculty of Sport and Health, Universitas Negeri Gorontalo, Indonesia
+  - name: Department of Pharmacy, Faculty of Sports and Health, Universitas Negeri Gorontalo, Jl. Jenderal Sudirman No. 6, Kota Gorontalo, Gorontalo 96128, Indonesia
     index: 1
+  - name: Faculty of Pharmacy, Universitas Halu Oleo, Kendari, Southeast Sulawesi, Indonesia
+    index: 2
+  - name: Faculty of Pharmacy, Universitas Bhakti Kencana, Bandung, West Java, Indonesia
+    index: 3
+  - name: Department of Chemistry, Faculty of Mathematics and Natural Sciences, Universitas Negeri Gorontalo, Gorontalo, Indonesia
+    index: 4
 date: 27 August 2026
 bibliography: paper.bib
 ---

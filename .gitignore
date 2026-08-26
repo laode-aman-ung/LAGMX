@@ -4,6 +4,10 @@ __pycache__/
 pdbfixer-venv/
 .pytest_cache/
 
+# Personal/financial documents -- never belong in a public repo
+*.pdf
+INV*.pdf
+
 # Legacy / large run directories (not part of the software repo;
 # run_matrix/ is the maintained, version-controlled test matrix)
 /complex_single/

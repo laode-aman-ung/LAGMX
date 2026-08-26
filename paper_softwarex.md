@@ -1,10 +1,18 @@
 # pyAutoGMX: Automated preparation and simulation of single- and multi-ligand protein complexes in GROMACS
 
-**La Ode Aman**^1
+**La Ode Aman**^1\*, **Arfan**^2 (ORCID: 0000-0003-3004-7101), **Aiyi Asnawi**^3 (ORCID: 0000-0002-8179-0520), **Netty Ino Ischak**^4 (ORCID: 0000-0002-7693-8842), **Dizky Ramadani Putri Papeo**^1 (ORCID: 0009-0001-3842-4189), **Hamsidar Hasan**^1 (ORCID: 0000-0003-0148-5233), **A. Mu'thi Andy Suryadi**^1 (ORCID: 0000-0002-7367-5661)
 
-^1 Department of Pharmacy, Faculty of Sport and Health, Universitas Negeri Gorontalo, Indonesia
+^1 Department of Pharmacy, Faculty of Sports and Health, Universitas Negeri Gorontalo, Jl. Jenderal Sudirman No. 6, Kota Gorontalo, Gorontalo 96128, Indonesia
+^2 Faculty of Pharmacy, Universitas Halu Oleo, Kendari, Southeast Sulawesi, Indonesia
+^3 Faculty of Pharmacy, Universitas Bhakti Kencana, Bandung, West Java, Indonesia
+^4 Department of Chemistry, Faculty of Mathematics and Natural Sciences, Universitas Negeri Gorontalo, Gorontalo, Indonesia
 
-Corresponding author: La Ode Aman (laode2010@gmail.com)
+\* Corresponding author: La Ode Aman (laode_aman@ung.ac.id)
+
+Author emails: laode_aman@ung.ac.id (La Ode Aman); arfan09@uho.ac.id (Arfan);
+aiyi.asnawi@bku.ac.id (Aiyi Asnawi); nettyischak@ung.ac.id (Netty Ino Ischak);
+dizky@ung.ac.id (Dizky Ramadani Putri Papeo); hamsidar.hasan@ung.ac.id
+(Hamsidar Hasan); a.muthi@ung.ac.id (A. Mu'thi Andy Suryadi)
 
 <!--
 NOTE FOR SUBMISSION: SoftwareX requires this manuscript in their Elsevier
@@ -25,7 +33,7 @@ your input before submission.
 | C6 | Software code languages, tools and services used | Python 3; GROMACS; AmberTools (`antechamber`, `parmchk2`, `tleap`); `parmed`; optionally `pdbfixer`/OpenMM |
 | C7 | Compilation requirements, operating environments and dependencies | Linux (developed and tested on Ubuntu); GROMACS (CUDA build required for GPU-accelerated `mdrun`, optional otherwise); AmberTools; Python 3 with `parmed` |
 | C8 | If available, link to developer documentation/manual | `README.md` and `CONTRIBUTING.md` in the repository (C2) |
-| C9 | Support email for questions | laode2010@gmail.com |
+| C9 | Support email for questions | laode_aman@ung.ac.id |
 
 <!--
 TODO before submission: tag the commit this paper describes as a release,
@@ -308,8 +316,8 @@ Multidisciplinary Health and Wellness Conference (GIMHWELT).
 
 ## Declaration of competing interest
 
-The author declares no competing financial interests or personal
+The authors declare no competing financial interests or personal
 relationships that could have appeared to influence the work reported in
-this paper. <!-- TODO: confirm/edit before submission -->
+this paper.
 
 ## References
