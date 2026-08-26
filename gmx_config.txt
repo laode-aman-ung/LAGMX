@@ -1,0 +1,69 @@
+# Configuration File for Molecular Dynamics Setup
+
+# Box Type:
+# Specify the type of box for simulation
+# Options: Triclinic, Cubic, Dodecahedron, or Octahedron
+box_type: Dodecahedron
+
+# Distance:
+# Specify the distance for the simulation
+distance: 1.0
+
+# Solvent Model:
+# Specify the solvent for the simulation
+solvent: spc216.gro
+
+# Possible values for charge:
+#   bcc   : AM1-BCC charges (the default)
+#   gas   : Mulliken charges in gas phase
+#   resp  : RESP charges
+#   none  : No charges
+charge: gas
+
+# Possible values for atom_type:
+#   gaff  : the default
+#   gaff2 : for GAFF2 (beta-version)
+#   amber : for PARM94/99/99SB
+#   bcc   : for bcc
+#   sybyl : for sybyl
+atom_type: gaff2
+
+# Protein force field for pdb2gmx (non-interactive)
+forcefield: amber03
+
+# Water model for pdb2gmx
+water: tip3p
+
+# Name of the merged Protein+ligand index group used in mdp tc-grps
+merged_group: Protein_LIG
+
+# Extra options passed to gmx mdrun (resource selection).
+# On a GPU machine -ntmpi must be given whenever -ntomp/OMP_NUM_THREADS is set.
+mdrun_options: -ntmpi 1 -ntomp 16 -nb gpu
+
+# Net charge passed to antechamber (-nc). "auto" reads the formal charge
+# column of the input PDB, or sums the partial charges of a MOL2 file.
+net_charge: auto
+
+# Optional structure curation with pdbfixer (receptors here are pre-curated)
+fix_structure: no
+fixer_python: /media/arga/DATA1000/multi_ligand_complex/multiple_complex/pdbfixer-venv/bin/python
+
+# Fallback SEQRES source for structure curation, used only when a receptor
+# file has no SEQRES records of its own and no matching ref_*.pdb sits next
+# to it in the complex directory. Must be >=90% identical to the observed
+# residues or it is rejected (see attach_seqres()/sequence_identity()).
+seqres_reference:
+
+# Target production MD length in nanoseconds. Replaces manually editing
+# `nsteps` in md.mdp.
+#   - Complex belum punya hasil produksi -> dijalankan dari 0 ns sampai
+#     production_ns (perilaku normal).
+#   - Complex SUDAH punya md.cpt dari run sebelumnya (mis. selesai 1 ns) dan
+#     production_ns lebih besar dari itu -> OTOMATIS dilanjutkan dari
+#     checkpoint sampai production_ns (system-prep & equilibrasi di-skip,
+#     hasil lama tidak dihapus/diulang).
+#   - Complex sudah mencapai production_ns -> di-skip.
+#   - Kosongkan value ini untuk kembali ke perilaku lama (pakai nsteps
+#     bawaan md.mdp, selalu mulai dari 0 ns).
+production_ns: 

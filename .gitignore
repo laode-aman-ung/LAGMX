@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.pyc
+pdbfixer-venv/
+
+# Legacy / large run directories (not part of the software repo;
+# run_matrix/ is the maintained, version-controlled test matrix)
+/complex_single/
+/complex_triple/
+/run_1ns/
+/run_100ns/
+
+# Personal / manuscript files (not part of the software)
+*.docx
+*.pptx
+*.png
+.~lock.*
+
+# Run logs / pdbfixer intermediate artifacts (regenerable)
+run_pyautogmx.out
+*.out
+step*.pdb
+
+# GROMACS / AmberTools generated output (regenerable, not source)
+*.gro
+*.trr
+*.xtc
+*.edr
+*.tpr
+*.cpt
+*.log
+*.ndx
+*.itp
+*.top
+*.xvg
+*_NEW.mol2
+mdout.mdp
+box.pdb
+solv.gro
+complex.pdb
+NEW_*.pdb
+ANTECHAMBER*
+ATOMTYPE*
+sqm.*
+leap.log
+tleap.in
+*.frcmod
+*.prmtop
+*.inpcrd
+*.AC
+*.AC0
+*.INF
+*.INT
+
+# Per-ligand working subdirectories created by gentop_gmx()
+run_matrix/complex_*/lig_*/
+run_matrix/complex_*/*.fixtmp
