@@ -40,7 +40,7 @@ echo "GPU siap dipakai (mdrun dipaksa -nb gpu)."
 echo "================================================="
 echo
 
-"$HOME/miniconda3/bin/python3" -u pyAutoGMX.py 2>&1 | tee run.log
+"$HOME/miniconda3/bin/python3" -u ../pyAutoGMX.py 2>&1 | tee run.log
 status=${PIPESTATUS[0]}
 
 echo

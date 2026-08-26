@@ -45,10 +45,26 @@ neutral or charged.
   configurable interpreter so pdbfixer does not need to share an
   environment with AmberTools/parmed)
 
+## Repository layout
+
+There is exactly **one** copy of the tool: [`pyAutoGMX.py`](pyAutoGMX.py)
+(and its companion [`fix_structure.py`](fix_structure.py)) at the repo
+root. Everything else it needs -- `gmx_config.txt`, the `.mdp` templates,
+and the `complex_*/` directories it processes -- is read relative to
+whatever directory you run it *from*, not relative to where the script
+lives. [`run_matrix/`](run_matrix/) is the one maintained, runnable example
+in this repo: it has its own `gmx_config.txt` and `.mdp` files (tuned for
+the test matrix) plus seven `complex_*/` scenarios. Use it as the template
+for a new project: copy `run_matrix/gmx_config.txt` and `run_matrix/*.mdp`
+into your own working directory, add your own `complex_*/` folders next to
+them, and point a launcher script at `pyAutoGMX.py` the same way
+[`run_matrix/run_pyautogmx.sh`](run_matrix/run_pyautogmx.sh) does
+(`python3 ../pyAutoGMX.py`, run from inside your working directory).
+
 ## Usage
 
 ```bash
-cd run_matrix   # or your own working directory with complex_*/ folders
+cd run_matrix
 ./run_pyautogmx.sh
 ```
 
@@ -58,9 +74,11 @@ Each `complex_*/` directory must contain:
 - optionally `ref*.pdb` (a reference structure with SEQRES records, used
   only if the receptor itself has none and structure curation is enabled)
 
-All simulation options are read from `gmx_config.txt` next to
-`pyAutoGMX.py` -- nothing is hardcoded in the script. See the comments in
-[`gmx_config.txt`](gmx_config.txt) for every option, including:
+All simulation options are read from `gmx_config.txt` in the working
+directory you run `pyAutoGMX.py` from -- nothing is hardcoded in the
+script. See the comments in
+[`run_matrix/gmx_config.txt`](run_matrix/gmx_config.txt) for every option,
+including:
 
 - `charge` -- `bcc` (AM1-BCC, accurate, slow) or `gas` (Gasteiger, fast, for
   quick iteration)

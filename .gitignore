@@ -11,6 +11,19 @@ pdbfixer-venv/
 /run_1ns/
 /run_100ns/
 
+# Root-level mdp/config templates left over from local, non-repo use
+# (complex_single/complex_triple above). They are NOT used by anything in
+# this repository -- run_matrix/ has its own, tuned copies -- so tracking
+# them here just creates a second, unused set of the same files. Copy
+# run_matrix/gmx_config.txt + run_matrix/*.mdp as your starting template
+# for a new project instead.
+/em.mdp
+/ions.mdp
+/md.mdp
+/npt.mdp
+/nvt.mdp
+/gmx_config.txt
+
 # Personal / manuscript files (not part of the software)
 *.docx
 *.pptx

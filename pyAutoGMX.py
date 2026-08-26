@@ -740,7 +740,10 @@ if __name__ == "__main__":
     MDRUN_OPTS = config_variables.get('mdrun_options', '')
     fix_structure = config_variables.get('fix_structure', 'no').strip().lower() in ('yes', 'true', '1')
     fixer_python = config_variables.get('fixer_python', sys.executable)
-    fixer_script = os.path.join(current_directory, 'fix_structure.py')
+    # fix_structure.py hidup satu tempat, di sebelah pyAutoGMX.py sendiri --
+    # bukan diduplikasi ke tiap direktori kerja (current_directory bisa jadi
+    # run_matrix/ atau folder lain, bukan tempat script ini berada).
+    fixer_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fix_structure.py')
     seqres_reference = config_variables.get('seqres_reference', '').strip()
     if seqres_reference and not os.path.isabs(seqres_reference):
         seqres_reference = os.path.join(current_directory, seqres_reference)

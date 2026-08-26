@@ -15,9 +15,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY_FILES = [
     "pyAutoGMX.py",
     "fix_structure.py",
-    "run_matrix/pyAutoGMX.py",
     "run_matrix/fix_ligand_valence.py",
-    "run_matrix/fix_structure.py",
 ]
 
 # complex_6broken is intentionally malformed and expected to fail the real
@@ -32,18 +30,23 @@ def test_python_files_exist_and_compile():
         subprocess.run([sys.executable, "-m", "py_compile", path], check=True)
 
 
-def test_top_level_and_run_matrix_scripts_match():
-    # pyAutoGMX.py exists in two places (repo root and run_matrix/) and is
-    # meant to be kept identical; this test exists specifically because the
-    # two copies drifted apart once during development (see README).
-    with open(os.path.join(ROOT, "pyAutoGMX.py")) as f:
-        root_version = f.read()
-    with open(os.path.join(ROOT, "run_matrix", "pyAutoGMX.py")) as f:
-        matrix_version = f.read()
-    assert root_version == matrix_version, (
-        "pyAutoGMX.py and run_matrix/pyAutoGMX.py have diverged -- "
-        "keep them identical or this project ends up publishing "
-        "inconsistent claims about what the tool can do"
+def test_only_one_copy_of_pyautogmx_exists():
+    # pyAutoGMX.py used to be duplicated into run_matrix/ and the two
+    # copies drifted apart during development (one had checkpoint-resume,
+    # the other had SEQRES curation, neither had both). There must be
+    # exactly one canonical copy from here on -- run_matrix/run_pyautogmx.sh
+    # invokes it via a relative path (../pyAutoGMX.py) instead of a second
+    # copy living next to the test scenarios.
+    assert os.path.exists(os.path.join(ROOT, "pyAutoGMX.py"))
+    assert not os.path.exists(os.path.join(ROOT, "run_matrix", "pyAutoGMX.py")), (
+        "run_matrix/pyAutoGMX.py should not exist -- there must be exactly "
+        "one copy of the script (repo root); see run_pyautogmx.sh, which "
+        "invokes ../pyAutoGMX.py"
+    )
+    assert not os.path.exists(os.path.join(ROOT, "run_matrix", "fix_structure.py")), (
+        "run_matrix/fix_structure.py should not exist -- fix_structure.py "
+        "is resolved relative to pyAutoGMX.py's own location, not cwd, so "
+        "it only needs to exist once, at the repo root"
     )
 
 
@@ -64,22 +67,20 @@ def test_run_matrix_scenarios_have_inputs():
 
 def test_gmx_config_has_required_keys():
     required = ["box_type", "distance", "solvent", "charge", "atom_type"]
-    for cfg in ["gmx_config.txt", "run_matrix/gmx_config.txt"]:
-        path = os.path.join(ROOT, cfg)
-        with open(path) as f:
-            text = f.read()
-        for key in required:
-            assert f"{key}:" in text, f"{cfg}: missing required key '{key}'"
+    path = os.path.join(ROOT, "run_matrix", "gmx_config.txt")
+    with open(path) as f:
+        text = f.read()
+    for key in required:
+        assert f"{key}:" in text, f"run_matrix/gmx_config.txt: missing required key '{key}'"
 
 
 def test_mdp_templates_have_required_params():
-    for mdp_dir in ["", "run_matrix"]:
-        for name in ["em.mdp", "nvt.mdp", "npt.mdp", "md.mdp", "ions.mdp"]:
-            path = os.path.join(ROOT, mdp_dir, name)
-            assert os.path.exists(path), f"missing {path}"
-            with open(path) as f:
-                text = f.read()
-            assert "integrator" in text, f"{path}: missing 'integrator ='"
+    for name in ["em.mdp", "nvt.mdp", "npt.mdp", "md.mdp", "ions.mdp"]:
+        path = os.path.join(ROOT, "run_matrix", name)
+        assert os.path.exists(path), f"missing {path}"
+        with open(path) as f:
+            text = f.read()
+        assert "integrator" in text, f"{path}: missing 'integrator ='"
 
 
 def test_fix_ligand_valence_detects_missing_hydrogen(tmp_path):
