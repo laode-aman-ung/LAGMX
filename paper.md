@@ -108,7 +108,7 @@ seven scenarios exercising the parts of the pipeline most likely to break:
 a single receptor chain with one ligand; a receptor split across three
 files/chains with three distinct ligands; a single receptor file with three
 chains and three *identical* ligand copies (moleculetype deduplication); a
-ligand supplied as MOL2 instead of PDB; a charged ligand (ADP\textsuperscript{3-})
+ligand supplied as MOL2 instead of PDB; a charged ligand (ADP3-)
 alongside a neutral one; a deliberately malformed ligand, which is expected
 to fail cleanly rather than produce a silently wrong topology; and a
 five-ligand system mixing identical, distinct, and charged species.
