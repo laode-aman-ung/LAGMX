@@ -9,6 +9,7 @@ tags:
   - structural bioinformatics
 authors:
   - name: La Ode Aman
+    orcid: 0000-0003-4478-6423
     affiliation: 1
     corresponding: true
   - name: Arfan
