@@ -311,8 +311,7 @@ stated limitations are publicly available under the MIT license at
 
 ## Acknowledgements
 
-This work was presented in preliminary form at the Gorontalo International
-Multidisciplinary Health and Wellness Conference (GIMHWELT).
+This research received no external funding; it was self-funded by the authors.
 
 ## Declaration of competing interest
 
