@@ -18,9 +18,12 @@ authors:
   - name: Aiyi Asnawi
     orcid: 0000-0002-8179-0520
     affiliation: 3
+  - name: Purnawan Pontana Putra
+    orcid: 0000-0001-9466-4569
+    affiliation: 4
   - name: Netty Ino Ischak
     orcid: 0000-0002-7693-8842
-    affiliation: 4
+    affiliation: 5
   - name: Dizky Ramadani Putri Papeo
     orcid: 0009-0001-3842-4189
     affiliation: 1
@@ -37,8 +40,10 @@ affiliations:
     index: 2
   - name: Faculty of Pharmacy, Universitas Bhakti Kencana, Bandung, West Java, Indonesia
     index: 3
-  - name: Department of Chemistry, Faculty of Mathematics and Natural Sciences, Universitas Negeri Gorontalo, Gorontalo, Indonesia
+  - name: Department of Pharmaceutical Chemistry, Faculty of Pharmacy, Universitas Andalas, Padang 25163, Indonesia
     index: 4
+  - name: Department of Chemistry, Faculty of Mathematics and Natural Sciences, Universitas Negeri Gorontalo, Gorontalo, Indonesia
+    index: 5
 date: 27 August 2026
 bibliography: paper.bib
 ---
