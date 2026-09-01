@@ -19,8 +19,15 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 
-export PATH="$HOME/miniconda3/envs/gromacs_env/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/miniconda3/envs/gromacs_env/lib:${LD_LIBRARY_PATH:-}"
+# Uses whatever gmx is on PATH; activate the environment first, e.g.
+#   conda activate pyautogmx
+if ! command -v gmx >/dev/null 2>&1; then
+    echo "GAGAL: 'gmx' tidak ada di PATH." >&2
+    echo "Aktifkan environment-nya dulu: conda activate pyautogmx" >&2
+    echo "(lihat ../environment.yml)" >&2
+    exit 1
+fi
+
 export GMX_MAXBACKUP=-1
 unset OMP_NUM_THREADS
 

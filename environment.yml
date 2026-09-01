@@ -17,8 +17,15 @@ name: pyautogmx
 channels:
   - conda-forge
   - bioconda
+#
+# The gromacs build pulled in here is CPU-only, which is the right default on
+# an unknown machine. For GPU-accelerated mdrun, install a CUDA build instead:
+#
+#   conda install -c conda-forge "gromacs=*=cuda*"
+#
 dependencies:
-  - python>=3.10
+  # Pinned to the range exercised by CI (see .github/workflows/ci.yml).
+  - python>=3.10,<3.13
   - gromacs
   - ambertools
   - parmed
