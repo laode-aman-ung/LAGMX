@@ -38,16 +38,23 @@ water: tip3p
 merged_group: Protein_LIG
 
 # Extra options passed to gmx mdrun (resource selection).
+# Left empty by default so GROMACS auto-detects the available hardware; this
+# is what you want on an unfamiliar machine. Set it explicitly to pin
+# resources, for example on a GPU workstation:
+#   mdrun_options: -ntmpi 1 -ntomp 16 -nb gpu
 # On a GPU machine -ntmpi must be given whenever -ntomp/OMP_NUM_THREADS is set.
-mdrun_options: -ntmpi 1 -ntomp 16 -nb gpu
+mdrun_options:
 
 # Net charge passed to antechamber (-nc). "auto" reads the formal charge
 # column of the input PDB, or sums the partial charges of a MOL2 file.
 net_charge: auto
 
 # Optional structure curation with pdbfixer (receptors here are pre-curated)
+# Path to a Python interpreter that has pdbfixer/OpenMM installed. Leave
+# empty to use the interpreter running pyAutoGMX itself. Only consulted when
+# fix_structure is "yes"; see environment.yml for how to create such an env.
 fix_structure: no
-fixer_python: /media/arga/DATA1000/multi_ligand_complex/multiple_complex/pdbfixer-venv/bin/python
+fixer_python:
 
 # Fallback SEQRES source for structure curation, used only when a receptor
 # file has no SEQRES records of its own and no matching ref_*.pdb sits next

@@ -73,3 +73,4 @@ tleap.in
 # Per-ligand working subdirectories created by gentop_gmx()
 run_matrix/complex_*/lig_*/
 run_matrix/complex_*/*.fixtmp
+quickstart_run/

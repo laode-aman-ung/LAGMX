@@ -39,11 +39,40 @@ neutral or charged.
 
 - GROMACS (built with CUDA if you want GPU-accelerated `mdrun`)
 - AmberTools (`antechamber`, `parmchk2`, `tleap`) for ligand parameterization
-- Python 3 with `parmed`
+- Python 3.10+ with `parmed`
 - Optional: a separate Python environment with `pdbfixer`/OpenMM, only
   needed if `fix_structure: yes` is set (structure curation runs through a
   configurable interpreter so pdbfixer does not need to share an
   environment with AmberTools/parmed)
+
+## Installation
+
+All of the above are available from conda-forge and bioconda:
+
+```bash
+conda env create -f environment.yml
+conda activate pyautogmx
+```
+
+Use `mamba` if you have it; solving this environment with plain `conda` can
+take several minutes. See [`environment.yml`](environment.yml) for how to
+create the optional `pdbfixer`/OpenMM environment.
+
+## Quickstart
+
+To check that the pipeline works on your machine before committing to a real
+run:
+
+```bash
+./quickstart.sh
+```
+
+This runs the smallest scenario from the test matrix -- one receptor chain,
+one ligand -- through the full pipeline in a few minutes, using Gasteiger
+charges and 10 ps of equilibration and production. It is a smoke test, not a
+scientific result: it answers "does this work here?", nothing more. Output
+lands in `quickstart_run/`, which is gitignored and safe to delete. If it
+fails, the log it points you at is what to attach to an issue.
 
 ## Repository layout
 
@@ -66,6 +95,17 @@ them, and point a launcher script at `pyAutoGMX.py` the same way
 ```bash
 cd run_matrix
 ./run_pyautogmx.sh
+```
+
+This uses whatever `gmx`, `antechamber` and `python3` are on your PATH and
+lets GROMACS choose the hardware it finds, so it runs on a CPU-only machine
+as well as a GPU one. To reproduce the stricter setup used for the runs
+reported in the paper -- refusing to start unless the `gmx` binary is a CUDA
+build and an NVIDIA GPU is visible, so that `mdrun` fails loudly instead of
+falling back to the CPU -- pass `--require-gpu`:
+
+```bash
+./run_pyautogmx.sh --require-gpu
 ```
 
 Each `complex_*/` directory must contain:
