@@ -217,23 +217,31 @@ subject of ongoing work.
 
 ## AI usage disclosure
 
-Generative AI tools were used in the preparation of this work and are
-disclosed here in full.
+Generative AI tools were used in the preparation of both the software and
+this manuscript, and are disclosed here in full.
 
-<!-- WAJIB DIPERIKSA: kalimat berikut menggambarkan sejauh mana AI dipakai.
-     Sesuaikan agar sesuai dengan kenyataan sebelum submit. -->
-An AI coding assistant (Claude, Anthropic) was used during preparation of the
-manuscript: to edit the paper's author and affiliation metadata, to verify a
-bibliographic reference against Crossref, and to author the continuous
-integration workflow that compiles the manuscript. [CONFIRM AND EXTEND: state
-here whether, and to what extent, AI tools contributed to `pyAutoGMX.py`
-itself, to the README, or to drafting the prose of this paper.]
+**Software.** AI coding assistants were used for parts of `pyAutoGMX.py`,
+including debugging, drafting individual functions, and clarifying GROMACS
+and AmberTools command usage. The pipeline architecture and the majority of
+the implementation were written by the authors. All AI-assisted code was
+exercised by the authors against the validation matrix described above; the
+results reported here were produced by running that code, not by inspecting
+it.
 
-All AI-assisted output was reviewed by the authors before inclusion.
-Scientific claims, the validation results reported above, and the design
-decisions described in Software design were verified against the code and
-against the simulation outputs by the authors, who take full responsibility
-for the content of this paper and of the software.
+**Manuscript.** AI assistance was used for parts of the prose throughout the
+manuscript and the project README, for drafting and for editing. In the
+revision that produced this version, an AI coding assistant (Claude,
+Anthropic) drafted the State of the field, Software design, Research impact
+statement, and AI usage disclosure sections, rewrote the Statement of need,
+and authored the continuous integration workflow that compiles the
+manuscript.
+
+**Verification.** All AI-assisted output was reviewed by the authors before
+inclusion. The design decisions reported in Software design were checked
+against the source code; the validation results were checked against the
+simulation outputs; and each reference was checked against its DOI. The
+authors take full responsibility for the content of this paper and of the
+software.
 
 ## Acknowledgements
 
