@@ -18,10 +18,22 @@ channels:
   - conda-forge
   - bioconda
 #
-# The gromacs build pulled in here is CPU-only, which is the right default on
-# an unknown machine. For GPU-accelerated mdrun, install a CUDA build instead:
+# The gromacs build pulled in here reports "GPU support: OpenCL", not CUDA,
+# even on a machine with an NVIDIA card. That is deliberate on conda-forge's
+# side and not a misconfiguration: several builds of the same version exist,
+# conda ranks equal versions by build number, and the generic build has been
+# rebuilt more often than the CUDA one (e.g. nompi_h26635d9_100 beats
+# nompi_cuda_h39c90b0_0). The __cuda virtual package only makes CUDA builds
+# eligible; it does not make them preferred. Portable is the right default
+# here, since not every user has an NVIDIA GPU.
 #
-#   conda install -c conda-forge "gromacs=*=cuda*"
+# To get a CUDA build on an NVIDIA machine, ask for it explicitly:
+#
+#   conda install -c conda-forge "gromacs=*=nompi_cuda*"
+#
+# Use *cuda* instead of nompi_cuda* only if you also want the MPI builds; a
+# leading "cuda*" matches nothing, because the build strings begin with the
+# MPI flavour rather than with "cuda".
 #
 dependencies:
   # Pinned to the range exercised by CI (see .github/workflows/ci.yml).
