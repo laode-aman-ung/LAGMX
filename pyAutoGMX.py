@@ -4,7 +4,6 @@ import subprocess
 import glob
 import re
 import shutil
-import tkinter as tk
 import parmed as pmd
 
 # Opsi tambahan untuk gmx mdrun (mis. "-ntmpi 1 -ntomp 16 -nb gpu"), diisi

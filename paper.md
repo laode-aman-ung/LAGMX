@@ -81,6 +81,24 @@ complex has already completed.
 
 ## Statement of need
 
+Protein-ligand MD is routine in structure-based drug discovery, but the
+setup cost per system is high and scales badly with the number of ligands.
+A researcher screening a series of candidate compounds, or studying a
+receptor with several co-bound cofactors, repeats nine largely manual
+stages for every complex, several of which prompt for interactive input.
+The multi-ligand failure modes are quiet rather than loud: GROMACS accepts
+a topology in which two identical ligand copies share a moleculetype name,
+and `antechamber` accepts a charged ligand as neutral. Both produce a
+simulation that runs to completion and is wrong.
+
+`pyAutoGMX` is aimed at computational chemists and pharmacy researchers who
+need many such systems prepared reproducibly, and who would rather not
+maintain a private pipeline of shell glue to get them. It reduces the setup
+of an arbitrary number of complexes to editing one configuration file and
+issuing one command.
+
+## State of the field
+
 Several existing tools address parts of this workflow, but none combine
 automated, config-driven, end-to-end execution with first-class support for
 an arbitrary number of ligands per complex:
@@ -107,6 +125,43 @@ directory and get a fully prepared, equilibrated, and simulated system out
 the other end, with the multi-ligand-specific failure modes handled by the
 tool rather than discovered by the user.
 
+## Software design
+
+`pyAutoGMX` is deliberately a single ~900-line script rather than a package,
+depending only on GROMACS, AmberTools, ParmEd, and the Python standard
+library. The target user typically works on a shared HPC node or a lab
+workstation where installing a package tree is friction rather than
+convenience, and a file that can be copied next to the data and run fits
+that setting better. The cost is that the tool is harder to unit-test and to
+reuse programmatically; this is a prototype trade-off we expect to revisit.
+
+Configuration lives in one plain-text `gmx_config.txt` rather than in
+command-line flags. Every parameter that affects the physics -- force field,
+water model, box type and margin, charge method, atom type, production
+length, `mdrun` resource options -- is recorded in a single file that sits
+beside the results, so the settings that produced a trajectory remain
+recoverable months later without reconstructing a shell history. Flags would
+have made the common case shorter to type and the reproducible case harder.
+
+Stage resumption is derived from output files rather than from a state
+database. `detect_stage()` decides how far a complex has progressed by
+testing for the *final* artefact of each stage (`em.gro`, `nvt.gro`,
+`npt.gro`, `md.cpt`), so a run interrupted midway through equilibration
+repeats only that stage and leaves the expensive topology construction and
+minimization intact. This keeps the tool stateless and robust to being
+killed, at the price of assuming the directory is not edited by hand
+between runs.
+
+Two correctness decisions are worth naming. `build_ligand_ids()` assigns
+every ligand file a unique moleculetype name up front, appending a numeric
+suffix on collision, so identical ligand copies cannot silently share a
+`[ moleculetype ]` block. `detect_net_charge()` reads the formal-charge
+column of a PDB, or sums the partial charges of a MOL2 file, and passes the
+result to `antechamber -nc` instead of letting it default to neutral. Both
+run on the input files before any GROMACS command executes, so a
+mis-specified system fails during preparation rather than yielding a
+trajectory that is wrong but plausible.
+
 ## Validation
 
 `pyAutoGMX` ships with a version-controlled test matrix (`run_matrix/`) of
@@ -125,6 +180,28 @@ mismatches and zero LINCS constraint warnings across all of them. Energy
 minimization converged in every case; NPT temperature and density are
 reported per scenario in the project README.
 
+## Research impact statement
+
+`pyAutoGMX` has not yet been used outside the authors' group, and we make no
+claim of realized external impact. Its case rests on near-term significance
+and on being ready for others to pick up.
+
+The validation matrix described above is the primary evidence. All seven
+scenarios, including their receptor and ligand inputs and their `.mdp`
+parameter files, are committed to the repository, so any reader can
+reproduce the reported runs from a clean checkout rather than take the
+numbers on trust. The deliberately malformed scenario is part of that
+matrix: it documents the boundary at which the tool refuses to proceed, so
+users can distinguish a genuine input problem from a tool failure.
+
+For community readiness, the software is MIT-licensed, its test suite runs
+in continuous integration across Python 3.10-3.12, and it ships contribution
+guidelines. The workflow it automates -- multi-ligand protein-ligand MD in
+GROMACS -- is common enough in structure-based drug discovery that we expect
+the audience for a working end-to-end pipeline to be broader than our own
+group. Realized impact remains to be demonstrated, and we regard growing it
+as the main task ahead of this software rather than a settled result.
+
 ## Limitations
 
 `pyAutoGMX` is at an early stage (prototype, not yet used outside this
@@ -137,6 +214,26 @@ chemically complete -- one test ligand required a missing hydrogen to be
 restored by a separate repair script before `antechamber` would accept it.
 These limitations are stated explicitly in the project README and are the
 subject of ongoing work.
+
+## AI usage disclosure
+
+Generative AI tools were used in the preparation of this work and are
+disclosed here in full.
+
+<!-- WAJIB DIPERIKSA: kalimat berikut menggambarkan sejauh mana AI dipakai.
+     Sesuaikan agar sesuai dengan kenyataan sebelum submit. -->
+An AI coding assistant (Claude, Anthropic) was used during preparation of the
+manuscript: to edit the paper's author and affiliation metadata, to verify a
+bibliographic reference against Crossref, and to author the continuous
+integration workflow that compiles the manuscript. [CONFIRM AND EXTEND: state
+here whether, and to what extent, AI tools contributed to `pyAutoGMX.py`
+itself, to the README, or to drafting the prose of this paper.]
+
+All AI-assisted output was reviewed by the authors before inclusion.
+Scientific claims, the validation results reported above, and the design
+decisions described in Software design were verified against the code and
+against the simulation outputs by the authors, who take full responsibility
+for the content of this paper and of the software.
 
 ## Acknowledgements
 
