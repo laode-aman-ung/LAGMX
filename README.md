@@ -200,6 +200,71 @@ attempt, `bcc` for production accuracy), `production_ns`, and
 `mdrun_options` if you want to pin threads or a GPU. Every option is
 documented in the file itself.
 
+## Running on a GPU
+
+`mdrun_options` is empty by default, so `gmx mdrun` runs with GROMACS' own
+`-nb auto`: it uses a GPU when it detects a compatible one, and the CPU
+otherwise. On a machine with a working CUDA build and an NVIDIA card,
+nothing needs to be configured — the GPU is used automatically.
+
+### "GPU support" in the binary does not mean the GPU is used
+
+A GROMACS binary can report GPU support and still run entirely on the CPU if
+the runtime driver is not visible to it. This is what that looks like in
+`md.log`:
+
+```
+GPU support         : OpenCL
+Running on 1 node with total 20 cores, 40 processing units
+    (GPU detection failed: No valid OpenCL driver found)
+```
+
+The run completes normally and reports no error — it is simply slow. A
+100 ns production run can finish on the CPU without anyone noticing.
+
+### Check that the GPU was actually used
+
+After a run:
+
+```bash
+grep -E "GPU detection|GPU selected|using .* GPU" complex_*/md.log
+```
+
+`1 GPU selected` means the GPU was used. `GPU detection failed` means it was
+not, whatever the binary claims to support.
+
+### Make a missing GPU an error instead
+
+If you expect a GPU and would rather the run stop than quietly fall back,
+request it explicitly in `gmx_config.txt`:
+
+```
+mdrun_options: -ntmpi 1 -ntomp 16 -nb gpu
+```
+
+With `-nb gpu`, `mdrun` fails instead of using the CPU. `-ntmpi 1` is
+required whenever `-ntomp` is set. The launcher has a matching preflight
+that refuses to start unless the binary is a CUDA build and an NVIDIA GPU is
+visible:
+
+```bash
+cd run_matrix
+./run_pyautogmx.sh --require-gpu
+```
+
+### Getting a CUDA build
+
+The `gromacs` package installed by `environment.yml` is the generic build,
+which reports OpenCL rather than CUDA. For CUDA, ask for that build
+explicitly:
+
+```bash
+conda install -c conda-forge "gromacs=*=nompi_cuda*"
+```
+
+See the comments in [`environment.yml`](environment.yml) for why the CUDA
+build is not selected by default even on an NVIDIA machine.
+
 ## Test matrix
 
 [`run_matrix/`](run_matrix/) is a small, version-controlled set of test
