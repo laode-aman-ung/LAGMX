@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "pyAutoGMX"
+abstract: >-
+  A single-file, config-driven Python tool that automates the preparation,
+  equilibration, and production stages of GROMACS molecular dynamics
+  simulations for protein-ligand complexes, with first-class support for
+  multiple ligands per complex.
+type: software
+version: 1.0.2
+date-released: 2026-09-01
+license: MIT
+repository-code: "https://github.com/laode-aman-ung/pyAutoGMX"
+url: "https://github.com/laode-aman-ung/pyAutoGMX"
+keywords:
+  - molecular dynamics
+  - GROMACS
+  - drug discovery
+  - computational chemistry
+  - structural bioinformatics
+  - protein-ligand complex
+authors:
+  - family-names: Aman
+    given-names: "La Ode"
+    orcid: "https://orcid.org/0000-0003-4478-6423"
+    affiliation: "Department of Pharmacy, Faculty of Sports and Health, Universitas Negeri Gorontalo, Gorontalo, Indonesia"
+  - given-names: Arfan
+    orcid: "https://orcid.org/0000-0003-3004-7101"
+    affiliation: "Faculty of Pharmacy, Universitas Halu Oleo, Kendari, Southeast Sulawesi, Indonesia"
+  - family-names: Asnawi
+    given-names: Aiyi
+    orcid: "https://orcid.org/0000-0002-8179-0520"
+    affiliation: "Faculty of Pharmacy, Universitas Bhakti Kencana, Bandung, West Java, Indonesia"
+  - family-names: Putra
+    given-names: "Purnawan Pontana"
+    orcid: "https://orcid.org/0000-0001-9466-4569"
+    affiliation: "Department of Pharmaceutical Chemistry, Faculty of Pharmacy, Universitas Andalas, Padang, Indonesia"
+  - family-names: Ischak
+    given-names: "Netty Ino"
+    orcid: "https://orcid.org/0000-0002-7693-8842"
+    affiliation: "Department of Chemistry, Faculty of Mathematics and Natural Sciences, Universitas Negeri Gorontalo, Gorontalo, Indonesia"
+  - family-names: Papeo
+    given-names: "Dizky Ramadani Putri"
+    orcid: "https://orcid.org/0009-0001-3842-4189"
+    affiliation: "Department of Pharmacy, Faculty of Sports and Health, Universitas Negeri Gorontalo, Gorontalo, Indonesia"
+  - family-names: Hasan
+    given-names: Hamsidar
+    orcid: "https://orcid.org/0000-0003-0148-5233"
+    affiliation: "Department of Pharmacy, Faculty of Sports and Health, Universitas Negeri Gorontalo, Gorontalo, Indonesia"
+  - family-names: Suryadi
+    given-names: "A. Mu'thi Andy"
+    orcid: "https://orcid.org/0000-0002-7367-5661"
+    affiliation: "Department of Pharmacy, Faculty of Sports and Health, Universitas Negeri Gorontalo, Gorontalo, Indonesia"
