@@ -129,6 +129,77 @@ including:
 - `fix_structure` / `fixer_python` / `seqres_reference` -- optional
   structure curation
 
+## Preparing your own system
+
+`quickstart.sh` proves the pipeline runs on your machine. To simulate your
+own complexes, create a working directory, copy the configuration and `.mdp`
+templates into it, and put one directory per complex next to them:
+
+```bash
+mkdir -p ~/my-project && cd ~/my-project
+cp /path/to/pyAutoGMX/run_matrix/gmx_config.txt .
+cp /path/to/pyAutoGMX/run_matrix/*.mdp .
+mkdir complex_egfr
+# ... put your receptor and ligand files in complex_egfr/ ...
+python3 /path/to/pyAutoGMX/pyAutoGMX.py
+```
+
+Every `complex_*/` directory in the working directory is processed in turn,
+so several systems are simply several directories.
+
+### What each complex directory must contain
+
+File names are matched by prefix, in sorted order:
+
+| Pattern | Meaning |
+| --- | --- |
+| `rec*.pdb` | Receptor. One file per chain, or one file containing several chains. |
+| `lig*.pdb` or `lig*.mol2` | Ligands. One file per ligand copy, including identical copies. |
+| `ref*.pdb` | Optional. A reference structure carrying SEQRES records, used only when the receptor has none and `fix_structure: yes` is set. |
+
+Anything that does not match `rec*` or `lig*` is ignored, so a ligand named
+`ATP.pdb` will not be picked up — rename it `lig_ATP.pdb`.
+
+### What the inputs have to satisfy
+
+These are requirements of the pipeline, not style preferences:
+
+- **Each ligand copy is its own file.** Three copies of the same compound
+  means three `lig*` files. pyAutoGMX gives each one a distinct
+  moleculetype name; it does not split a single file containing three
+  copies.
+- **Ligands must be chemically complete**, hydrogens included. `antechamber`
+  rejects a ligand whose valences do not add up, and this is the most common
+  reason a run stops during preparation. `run_matrix/fix_ligand_valence.py`
+  repairs the specific case of MOL2 atoms missing hydrogens relative to
+  their SYBYL atom type:
+
+  ```bash
+  python3 /path/to/pyAutoGMX/run_matrix/fix_ligand_valence.py lig_mine.mol2
+  ```
+
+  Note that `obabel -h` is **not** a safe substitute here: on our test
+  ligands it failed to equalise aromatic rings and introduced new valence
+  errors elsewhere in the molecule.
+- **Formal charge must be readable from the file.** With `net_charge: auto`
+  (the default), the charge of a PDB ligand is read from the formal-charge
+  column (columns 79-80, e.g. `N1+`, `O1-`), and the charge of a MOL2 ligand
+  is the sum of its partial charges. If that column is blank on a charged
+  ligand, `antechamber` will treat the molecule as neutral and produce wrong
+  charges without reporting an error. Set `net_charge` explicitly if you are
+  unsure.
+- **The receptor should contain protein only.** Index-group selection
+  assumes ligands are the only non-protein, non-solvent species present, so
+  crystallographic waters, ions and cofactors you do not intend to simulate
+  should be removed from `rec*.pdb` first.
+
+### Then check the settings
+
+Open `gmx_config.txt` and set at least `charge` (`gas` for a fast first
+attempt, `bcc` for production accuracy), `production_ns`, and
+`mdrun_options` if you want to pin threads or a GPU. Every option is
+documented in the file itself.
+
 ## Test matrix
 
 [`run_matrix/`](run_matrix/) is a small, version-controlled set of test

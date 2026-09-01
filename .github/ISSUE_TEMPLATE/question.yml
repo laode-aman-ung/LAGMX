@@ -1,0 +1,21 @@
+name: Question or usage help
+description: Ask how to do something, or whether pyAutoGMX fits your case
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+
+  - type: textarea
+    id: system
+    attributes:
+      label: What system are you trying to simulate?
+      description: >-
+        Number of receptor chains, number and kind of ligands (identical
+        copies, distinct compounds, charged species), and what your input
+        files look like. This is usually what determines the answer.
+    validations:
+      required: true

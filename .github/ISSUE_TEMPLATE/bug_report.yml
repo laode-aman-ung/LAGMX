@@ -1,0 +1,86 @@
+name: Bug report
+description: Something failed or produced a wrong result
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying pyAutoGMX. The fields below are the ones we almost
+        always end up asking for, so filling them in now saves a round trip.
+
+        If you have not run `./quickstart.sh` yet, please do — it tells us
+        whether the problem is with your environment or with your system.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you run, what did you expect, and what did you get instead?
+      placeholder: |
+        I ran `python3 pyAutoGMX.py` on a complex with two ligands and it
+        stopped at the topology merging stage with ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: quickstart
+    attributes:
+      label: Does ./quickstart.sh pass on this machine?
+      options:
+        - "Yes, quickstart passes"
+        - "No, quickstart also fails"
+        - "I have not run it"
+    validations:
+      required: true
+
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: "Please paste the output of these commands."
+      placeholder: |
+        $ gmx --version | head -5
+        $ antechamber -h 2>&1 | head -2
+        $ python3 -c "import parmed; print(parmed.__version__)"
+        $ python3 --version
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: gmx_config.txt
+      description: The config file from the directory you ran pyAutoGMX in.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: layout
+    attributes:
+      label: Complex directory contents
+      description: "Output of `ls complex_*/` — the receptor and ligand files you supplied."
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Error output
+      description: >-
+        The failing part of the output, or the run.log / quickstart.log file.
+        Please include the actual error, not only the last line.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: >-
+        Operating system, whether you installed via environment.yml or by
+        hand, GPU or CPU, and anything unusual about your ligands (charged,
+        identical copies, non-standard residues).
