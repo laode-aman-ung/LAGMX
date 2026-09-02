@@ -711,21 +711,44 @@ def run_production_simulation(target_ns=None, resume=False):
         print(f"Error occurred during run_production_simulation execution: {e}")
         raise
         
-if __name__ == "__main__":     
+if __name__ == "__main__":
     current_directory = os.getcwd()
-    with open('gmx_config.txt', 'r') as config_file:
-            config_lines = config_file.readlines()
-            config_variables = {}
-            for line in config_lines:                
-                    if not line.strip().startswith('#'):
 
-                        try:
-                            name, value = line.strip().split(': ')
-                            name = name.strip()
-                            value = value.strip()
-                            config_variables[name] = value
-                        except ValueError:
-                            pass
+    # Every path this tool uses is resolved against the working directory, not
+    # against the location of this file. That is deliberate -- the script is
+    # meant to be copied next to the data -- but it makes running it from the
+    # repository root fail, and a bare FileNotFoundError does not tell a new
+    # user whether the tool is broken, the install is wrong, or they are simply
+    # in the wrong place. So say which.
+    config_path = os.path.join(current_directory, 'gmx_config.txt')
+    try:
+        with open(config_path, 'r') as config_file:
+            config_lines = config_file.readlines()
+    except FileNotFoundError:
+        sys.exit(
+            f"LAGMX: no 'gmx_config.txt' in {current_directory}\n"
+            "\n"
+            "LAGMX reads its configuration, .mdp templates and complex_*/ "
+            "directories from\nthe directory you run it from, not from where "
+            "LAGMX.py lives. Run it from a\ndirectory that holds those files.\n"
+            "\n"
+            "The worked example in this repository is run_matrix/:\n"
+            "\n"
+            "    cd run_matrix && ./run_lagmx.sh\n"
+            "\n"
+            "To start your own project, copy run_matrix/gmx_config.txt and "
+            "run_matrix/*.mdp\ninto your working directory, add your complex_*/ "
+            "folders next to them, and run\nLAGMX.py from there."
+        )
+
+    config_variables = {}
+    for line in config_lines:
+        if not line.strip().startswith('#'):
+            try:
+                name, value = line.strip().split(': ')
+                config_variables[name.strip()] = value.strip()
+            except ValueError:
+                pass
 
     box_type = config_variables['box_type']
     box_type = box_type.lower()
