@@ -162,6 +162,18 @@ run on the input files before any GROMACS command executes, so a
 mis-specified system fails during preparation rather than yielding a
 trajectory that is wrong but plausible.
 
+LAGMX did not begin as a single tool. Between July and August 2023 the first
+author published six single-purpose shell scripts, each automating one part of
+this workflow: `autogmx_protein-1ligand` and `autogmx_protein-2ligands` for
+preparation and simulation, `gmxana1_lig2` and `gmxana2_lig2` for trajectory
+analysis and binding-energy calculation, `ladina_liglig` for ligand-ligand
+complexes, and `extend_mdrun` for extending production runs. Each worked, but
+each handled one case, they shared no code, and the multi-ligand topology
+problem was solved separately and inconsistently in each. LAGMX consolidates
+that work into one implementation in which the topology logic exists exactly
+once. The earlier repositories remain publicly available as a record of that
+development, and are superseded by this software.
+
 ## Validation
 
 `LAGMX` ships with a version-controlled test matrix (`run_matrix/`) of

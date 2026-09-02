@@ -290,6 +290,31 @@ hydrogen -- it detects atoms with fewer neighbors than their SYBYL atom type
 requires, completes the missing bond by tetrahedral/trigonal geometry, and
 verifies the result through `antechamber`.
 
+## Origins
+
+LAGMX consolidates and rewrites a set of single-purpose shell scripts the
+first author published in 2023, each solving one part of the same workflow:
+
+| Predecessor | Published | What it did |
+|---|---|---|
+| [`autogmx_protein-1ligand`](https://github.com/laodeaman-ai/autogmx_protein-1ligand) | 14 Jul 2023 | MD automation for many protein complexes, one ligand each |
+| [`autogmx_protein-2ligands`](https://github.com/laodeaman-ai/autogmx_protein-2ligands) | 14 Jul 2023 | The same for two ligands per complex |
+| [`gmxana1_lig2`](https://github.com/laodeaman-ai/gmxana1_lig2) | 14 Jul 2023 | RMSD, RMSF, SASA and gyration analysis |
+| [`gmxana2_lig2`](https://github.com/laodeaman-ai/gmxana2_lig2) | 14 Jul 2023 | MMPBSA / MMGBSA via gmx_MMPBSA |
+| [`ladina_liglig`](https://github.com/laodeaman-ai/ladina_liglig) | 19 Jul 2023 | Ligand-ligand complexes, with the `.mdp` templates |
+| [`extend_mdrun`](https://github.com/laodeaman-ai/extend_mdrun) | 16 Aug 2023 | Extending a production run from a config file |
+
+Those scripts worked, but each handled one case, they shared no code, and the
+hard part -- keeping multiple ligands from corrupting a topology -- was solved
+separately and inconsistently in each. LAGMX replaces all of them with one
+Python implementation where that logic exists once: distinct moleculetype
+names per ligand copy, restraint includes placed inside the right block, atom
+types deduplicated by name, and per-ligand net charge detected and carried
+through.
+
+The predecessor repositories remain public and unchanged as a record of that
+earlier work. They are not maintained; LAGMX supersedes them.
+
 ## Scope, evidence and limits
 
 **Already demonstrated:** identical ligand copies handled without collision;
