@@ -55,7 +55,8 @@ ANALYSIS_DEFAULTS = {
     "analysis_gmx": "gmx",            # which gmx to analyse with
     "mmpbsa_python": "",              # env holding gmx_MMPBSA; empty = disabled
     "mmpbsa_method": "gb",            # gb, pb, or both
-    "mmpbsa_frames": "100",           # frames sampled from the production run
+    "mmpbsa_frames": "100",           # target frame count, if no interval given
+    "mmpbsa_interval": "",            # explicit frame stride; overrides the target
     "mmpbsa_igb": "5",
     "mmpbsa_salt": "0.150",
 }
@@ -220,6 +221,22 @@ def build_index(tpr, out_ndx, workdir, merged_group="Protein_LIG"):
         )
         if ok:
             groups[merged_group] = new_index
+
+        # One group per ligand copy. A system with the same ligand in three
+        # equivalent sites has three independent measurements in it; leaving
+        # them fused in "Other" would report their sum as if it were one
+        # binding event, and throw away the spread between the sites -- which
+        # is the only internal check on how reproducible the number is.
+        ok, out3 = gmx_run(
+            ["make_ndx", "-f", tpr, "-n", out_ndx, "-o", out_ndx],
+            stdin=f'splitres {groups["Other"]}\nq\n', cwd=workdir)
+        if ok:
+            after = {name: int(num) for num, name in
+                     re.findall(r"^\s*(\d+)\s+(\S+)\s*:", out3, re.M)}
+            for name, num in after.items():
+                if name not in groups:
+                    groups[name] = num
+                    groups.setdefault("_ligan_terpisah", []).append(name)
     return groups
 
 
@@ -677,6 +694,10 @@ def analyse_mmpbsa(ctx):
         return {}
     if "Other" not in ctx["groups"] or "Protein" not in ctx["groups"]:
         return {}
+    # Run once per ligand copy when the system holds several, so the answer is
+    # a per-site binding energy with a spread, not one lumped number.
+    copies = ctx["groups"].get("_ligan_terpisah") or []
+    targets = [(name, ctx["groups"][name]) for name in copies] or [("Other", ctx["groups"]["Other"])]
     topol = os.path.join(ctx["cdir"], "topol.top")
     if not os.path.exists(topol):
         say("topol.top not found, MM/PBSA skipped", 6)
@@ -685,13 +706,48 @@ def analyse_mmpbsa(ctx):
     total = _frame_count(ctx)
     if total < 2:
         return {}
-    wanted = max(1, min(ctx["mmpbsa_frames"], total))
-    interval = max(1, total // wanted)
+    # An explicit stride beats a target count, because the stride is the thing
+    # with physical meaning: frames closer together than the system's
+    # correlation time cost time without adding information, and a standard
+    # error computed over them looks smaller than it is.
+    if ctx["mmpbsa_interval"]:
+        interval = max(1, ctx["mmpbsa_interval"])
+    else:
+        wanted = max(1, min(ctx["mmpbsa_frames"], total))
+        interval = max(1, total // wanted)
+    sampled = len(range(1, total + 1, interval))
 
     method = ctx["mmpbsa_method"].lower()
+    say(f"gmx_MMPBSA: {total} frame tersedia, interval {interval} -> "
+        f"{sampled} frame disampling; {len(targets)} salinan ligan "
+        f"({', '.join(name for name, _ in targets)})", 6)
+    per_copy, out = [], {}
+    for label, group_num in targets:
+        got = _run_one_mmpbsa(ctx, exe, label, group_num, total, interval, method)
+        if got:
+            per_copy.append((label, got))
+    if not per_copy:
+        return {}
+    for key in sorted({k for _, g in per_copy for k in g}):
+        vals = [g[key] for _, g in per_copy if key in g]
+        if not vals or not key.endswith("_kcal"):
+            continue
+        out[key] = sum(vals) / len(vals)
+        if len(vals) > 1:
+            mean = out[key]
+            out[key + "_sd_antar_situs"] = (
+                sum((v - mean) ** 2 for v in vals) / (len(vals) - 1)) ** 0.5
+    for label, g in per_copy:
+        for key, val in g.items():
+            out[f"{key}_{label}"] = val
+    return out
+
+
+def _run_one_mmpbsa(ctx, exe, label, group_num, total, interval, method):
+    """One gmx_MMPBSA run: the protein against a single ligand group."""
     blocks = [
         "&general",
-        f'sys_name="{os.path.basename(ctx["cdir"])}",',
+        f'sys_name="{os.path.basename(ctx["cdir"])}_{label}",',
         f"startframe=1, endframe={total}, interval={interval},",
         "verbose=2,",
         "/",
@@ -700,30 +756,31 @@ def analyse_mmpbsa(ctx):
         blocks += ["&gb", f"igb={ctx['mmpbsa_igb']}, saltcon={ctx['mmpbsa_salt']},", "/"]
     if method in ("pb", "both", "pbsa"):
         blocks += ["&pb", f"istrng={ctx['mmpbsa_salt']}, inp=2, radiopt=0,", "/"]
-    with open(ctx["a"]("mmpbsa.in"), "w") as fh:
+    infile = ctx["a"](f"mmpbsa_{label}.in")
+    with open(infile, "w") as fh:
         fh.write("\n".join(blocks) + "\n")
 
     env = dict(os.environ)
     env["PATH"] = os.path.dirname(os.path.abspath(GMX)) + os.pathsep + env.get("PATH", "")
-    cmd = [exe, "-O", "-i", ctx["a"]("mmpbsa.in"),
+    cmd = [exe, "-O", "-i", infile,
            "-cs", ctx["tpr"], "-ci", ctx["ndx"],
-           "-cg", str(ctx["groups"]["Protein"]), str(ctx["groups"]["Other"]),
+           "-cg", str(ctx["groups"]["Protein"]), str(group_num),
            "-ct", ctx["xtc"], "-cp", "topol.top",
-           "-o", ctx["a"]("mmpbsa_results.dat"),
-           "-eo", ctx["a"]("mmpbsa_frames.csv"), "-nogui"]
-    say(f"gmx_MMPBSA: {total} frame, interval {interval}, metode {method}", 6)
+           "-o", ctx["a"](f"mmpbsa_{label}.dat"),
+           "-eo", ctx["a"](f"mmpbsa_{label}.csv"), "-nogui"]
+    say(f"gmx_MMPBSA [{label}]: interval {interval}, metode {method}", 8)
     try:
         proc = subprocess.run(cmd, cwd=ctx["cdir"], capture_output=True,
                               text=True, env=env, timeout=86400)
     except (OSError, subprocess.TimeoutExpired) as exc:
-        say(f"gmx_MMPBSA failed: {exc}", 6)
+        say(f"gmx_MMPBSA [{label}] failed: {exc}", 6)
         return {}
     if proc.returncode != 0:
         tail = (proc.stdout + proc.stderr).strip().splitlines()[-3:]
-        say("gmx_MMPBSA failed: " + " | ".join(tail), 6)
+        say(f"gmx_MMPBSA [{label}] failed: " + " | ".join(tail), 6)
         return {}
 
-    out, dat = {}, ctx["a"]("mmpbsa_results.dat")
+    out, dat = {}, ctx["a"](f"mmpbsa_{label}.dat")
     if os.path.exists(dat):
         section = None
         for line in open(dat, errors="replace"):
@@ -809,6 +866,7 @@ def analyse_complex(cdir, cfg, requested):
         "mmpbsa_exe": _resolve_mmpbsa(cfg.get("mmpbsa_python", "").strip()),
         "mmpbsa_method": cfg.get("mmpbsa_method", "gb"),
         "mmpbsa_frames": int(cfg.get("mmpbsa_frames", "100")),
+        "mmpbsa_interval": int(cfg.get("mmpbsa_interval") or 0),
         "mmpbsa_igb": cfg.get("mmpbsa_igb", "5"),
         "mmpbsa_salt": cfg.get("mmpbsa_salt", "0.150"),
     }

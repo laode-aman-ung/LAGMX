@@ -121,9 +121,27 @@ mmpbsa_python:
 # memeringkat ligan; MM/PBSA lebih mahal dan lebih tepat secara absolut.
 mmpbsa_method: gb
 
-# Jumlah frame yang disampling dari lintasan produksi. Interval dihitung
-# otomatis dari panjang lintasan, jadi angka ini tidak perlu diubah saat
-# production_ns berubah.
+# Dua cara menentukan frame mana yang disampling. `mmpbsa_interval` menang
+# bila diisi.
+#
+# mmpbsa_interval: jarak antar frame, dalam satuan frame. Ini yang punya makna
+#   fisik: frame yang berjarak lebih dekat daripada waktu autokorelasi sistem
+#   menambah biaya tanpa menambah informasi, dan galat standar yang dihitung
+#   atasnya tampak lebih kecil daripada yang sebenarnya karena rumusnya
+#   mengasumsikan sampel independen.
+#
+#   Dengan nstxout-compressed 1000 dan dt 0.002 (satu frame tiap 2 ps),
+#   pada produksi 100 ns dikurangi 10 ns awal = 45.000 frame tersisa:
+#
+#        interval    jarak      frame disampling
+#              50    100 ps                 900
+#             100    200 ps                 450
+#             250    500 ps                 180   <- lazim dipakai
+#             500    1,0 ns                  90
+#
+# mmpbsa_frames: dipakai hanya bila mmpbsa_interval kosong — jumlah frame yang
+#   dituju, dan intervalnya dihitung dari panjang lintasan.
+mmpbsa_interval: 250
 mmpbsa_frames: 100
 
 # Model Generalized Born (igb) dan konsentrasi garam dalam M.
