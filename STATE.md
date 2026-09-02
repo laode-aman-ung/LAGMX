@@ -19,15 +19,59 @@ Penggantian nama `pyAutoGMX` → **LAGMX** selesai dan terdorong. Repo bersih.
 - Ditambahkan berkas wajib sinkronisasi: `CLAUDE.md`, `STATE.md`,
   `.gitattributes`.
 
+## JOSS — ditolak 27 Agustus 2026, paling cepat diajukan ulang 24 Februari 2027
+
+Pengajuan sebagai pyAutoGMX (issue #11216) **ditolak oleh AEiC Rachel
+Kurchin**, bukan karena galat teknis:
+
+> "I'll need to reject this submission under our new scope guidelines. Your
+> code needs to have been under open development for at least six months."
+
+Seluruh pemeriksaan otomatis justru lolos: 7 DOI OK tanpa satu pun MISSING
+atau INVALID, lisensi MIT diakui OSI, Statement of need ditemukan, proof PDF
+terbentuk. Yang menjatuhkan adalah umur dan sinyal aktivitas:
+
+```
+commit pertama 26 Agustus 2026 · diajukan 27 Agustus 2026  → berumur 1 hari
+896 insertions dalam satu jendela 48 jam                    ditandai merah
+stars 0 · forks 0 · contributors 1 · releases 0 · issues 0 · PR 0
+```
+
+**Tanggal paling cepat: 24 Februari 2027** (enam bulan sejak commit pertama).
+
+Penggantian nama **tidak mereset jam itu** — riwayat git utuh dan tanggal
+pembuatan repo di GitHub tetap 26 Agustus 2026. Membuat repo baru alih-alih
+me-rename akan memulai hitungan dari nol; itu sebabnya rename dipilih.
+
+### Yang harus dibangun sampai Februari
+
+Enam bulan adalah syarat minimum, bukan jaminan. Yang dinilai editor adalah
+apakah ini perangkat lunak yang hidup, dan semua angka di atas nol.
+
+1. **Commit tersebar**, bukan menumpuk. Pola satu ledakan lalu senyap persis
+   yang ditandai merah oleh editorialbot.
+2. **Rilis bertahap.** Mulai dari versi yang menandai penggantian nama, lalu
+   seterusnya mengikuti perbaikan nyata.
+3. **Issue dan PR**, termasuk milik sendiri: catat bug, rencana, keterbatasan.
+   Repo dengan nol issue terbaca seperti belum pernah dipakai.
+4. **Pengguna di luar penulis.** Tiga rekan penulis punya ORCID; bila mereka
+   memakai LAGMX dan melaporkan temuan sebagai issue, itu sinyal terkuat yang
+   bisa dibangun.
+5. **Arsip Zenodo** dibuat menjelang pengajuan, supaya DOI mencatat LAGMX.
+
+### Sudah beres
+
+editorialbot menandai empat bagian hilang di naskah — State of the field,
+Software design, Research impact statement, AI usage disclosure. **Keempatnya
+kini ada** di `paper.md`, bersama Validation dan Limitations.
+
 ## Langkah berikutnya
 
-1. **Ajukan ulang ke JOSS** dengan nama LAGMX. Pengajuan sebelumnya sebagai
-   pyAutoGMX gagal karena persoalan teknis di GitHub.
-2. Buat rilis baru yang menandai penggantian nama, lalu selaraskan `version`
-   dan `date-released` di `CITATION.cff`. Saat ini masih `1.0.3` /
-   `2026-09-01`, yaitu rilis terakhir dengan nama lama.
-3. JOSS mensyaratkan arsip ber-DOI (Zenodo) saat penerimaan. Buat arsipnya
-   **setelah** nama final, supaya DOI-nya mencatat LAGMX.
+1. Buat rilis yang menandai penggantian nama, lalu selaraskan `version` dan
+   `date-released` di `CITATION.cff`. Saat ini masih `1.0.3` / `2026-09-01`,
+   yaitu rilis terakhir dengan nama lama.
+2. Jalankan poin 1–4 di atas secara bertahap sepanjang enam bulan ini.
+3. Menjelang Februari 2027: buat arsip Zenodo, lalu ajukan ulang.
 
 ## Tertunda / macet
 
