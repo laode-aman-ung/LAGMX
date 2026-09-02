@@ -1,5 +1,5 @@
 ---
-title: 'pyAutoGMX: Automated preparation and simulation of single- and multi-ligand protein complexes in GROMACS'
+title: 'LAGMX: Automated preparation and simulation of single- and multi-ligand protein complexes in GROMACS'
 tags:
   - Python
   - molecular dynamics
@@ -50,13 +50,13 @@ bibliography: paper.bib
 
 ## Summary
 
-`pyAutoGMX` is a single Python script that automates the preparation,
+`LAGMX` is a single Python script that automates the preparation,
 equilibration, and production stages of a molecular dynamics (MD) simulation
 of a protein-ligand complex in GROMACS [@abraham2015gromacs]. Preparing one
 such system by hand normally requires nine manual stages -- receptor
 structure curation, ligand parameterization, topology merging, solvation,
 ion addition, energy minimization, index-group selection, and two stages of
-equilibration -- several of which require interactive input. `pyAutoGMX`
+equilibration -- several of which require interactive input. `LAGMX`
 runs all of this, plus a configurable production run, from one invocation,
 for every complex directory it is pointed at.
 
@@ -91,7 +91,7 @@ a topology in which two identical ligand copies share a moleculetype name,
 and `antechamber` accepts a charged ligand as neutral. Both produce a
 simulation that runs to completion and is wrong.
 
-`pyAutoGMX` is aimed at computational chemists and pharmacy researchers who
+`LAGMX` is aimed at computational chemists and pharmacy researchers who
 need many such systems prepared reproducibly, and who would rather not
 maintain a private pipeline of shell glue to get them. It reduces the setup
 of an arbitrary number of complexes to editing one configuration file and
@@ -119,7 +119,7 @@ an arbitrary number of ligands per complex:
   that runs by default; assembling and validating that pipeline -- including
   the multi-ligand-specific correctness issues above -- is left to the user.
 
-`pyAutoGMX` targets the gap between these: a single, config-driven script
+`LAGMX` targets the gap between these: a single, config-driven script
 that a user with a set of receptor and ligand files can point at a
 directory and get a fully prepared, equilibrated, and simulated system out
 the other end, with the multi-ligand-specific failure modes handled by the
@@ -127,7 +127,7 @@ tool rather than discovered by the user.
 
 ## Software design
 
-`pyAutoGMX` is deliberately a single ~900-line script rather than a package,
+`LAGMX` is deliberately a single ~900-line script rather than a package,
 depending only on GROMACS, AmberTools, ParmEd, and the Python standard
 library. The target user typically works on a shared HPC node or a lab
 workstation where installing a package tree is friction rather than
@@ -164,7 +164,7 @@ trajectory that is wrong but plausible.
 
 ## Validation
 
-`pyAutoGMX` ships with a version-controlled test matrix (`run_matrix/`) of
+`LAGMX` ships with a version-controlled test matrix (`run_matrix/`) of
 seven scenarios exercising the parts of the pipeline most likely to break:
 a single receptor chain with one ligand; a receptor split across three
 files/chains with three distinct ligands; a single receptor file with three
@@ -182,7 +182,7 @@ reported per scenario in the project README.
 
 ## Research impact statement
 
-`pyAutoGMX` has not yet been used outside the authors' group, and we make no
+`LAGMX` has not yet been used outside the authors' group, and we make no
 claim of realized external impact. Its case rests on near-term significance
 and on being ready for others to pick up.
 
@@ -204,7 +204,7 @@ as the main task ahead of this software rather than a settled result.
 
 ## Limitations
 
-`pyAutoGMX` is at an early stage (prototype, not yet used outside this
+`LAGMX` is at an early stage (prototype, not yet used outside this
 project). Five nanoseconds of production demonstrates that the pipeline
 executes correctly, not that any given system's dynamics have converged;
 `grompp` is still run with `-maxwarn` during equilibration and production;
@@ -220,7 +220,7 @@ subject of ongoing work.
 Generative AI tools were used in the preparation of both the software and
 this manuscript, and are disclosed here in full.
 
-**Software.** AI coding assistants were used for parts of `pyAutoGMX.py`,
+**Software.** AI coding assistants were used for parts of `LAGMX.py`,
 including debugging, drafting individual functions, and clarifying GROMACS
 and AmberTools command usage. The pipeline architecture and the majority of
 the implementation were written by the authors. All AI-assisted code was

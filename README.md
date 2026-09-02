@@ -1,4 +1,4 @@
-# pyAutoGMX
+# LAGMX
 
 Automated preparation and simulation of single- and multi-ligand protein
 complexes in GROMACS.
@@ -19,7 +19,7 @@ includes have to live inside the right moleculetype block, atom types have
 to be deduplicated by name rather than string-matched, and each ligand's net
 charge has to be detected and passed through correctly.
 
-`pyAutoGMX.py` runs the whole thing as one script, in three stages:
+`LAGMX.py` runs the whole thing as one script, in three stages:
 
 1. **Preparation** -- optional structure curation (missing internal loops,
    validated against a reference sequence), ligand parameterization (GAFF2 +
@@ -51,7 +51,7 @@ All of the above are available from conda-forge and bioconda:
 
 ```bash
 conda env create -f environment.yml
-conda activate pyautogmx
+conda activate lagmx
 ```
 
 Use `mamba` if you have it; solving this environment with plain `conda` can
@@ -76,7 +76,7 @@ fails, the log it points you at is what to attach to an issue.
 
 ## Repository layout
 
-There is exactly **one** copy of the tool: [`pyAutoGMX.py`](pyAutoGMX.py)
+There is exactly **one** copy of the tool: [`LAGMX.py`](LAGMX.py)
 (and its companion [`fix_structure.py`](fix_structure.py)) at the repo
 root. Everything else it needs -- `gmx_config.txt`, the `.mdp` templates,
 and the `complex_*/` directories it processes -- is read relative to
@@ -86,15 +86,15 @@ in this repo: it has its own `gmx_config.txt` and `.mdp` files (tuned for
 the test matrix) plus seven `complex_*/` scenarios. Use it as the template
 for a new project: copy `run_matrix/gmx_config.txt` and `run_matrix/*.mdp`
 into your own working directory, add your own `complex_*/` folders next to
-them, and point a launcher script at `pyAutoGMX.py` the same way
-[`run_matrix/run_pyautogmx.sh`](run_matrix/run_pyautogmx.sh) does
-(`python3 ../pyAutoGMX.py`, run from inside your working directory).
+them, and point a launcher script at `LAGMX.py` the same way
+[`run_matrix/run_lagmx.sh`](run_matrix/run_lagmx.sh) does
+(`python3 ../LAGMX.py`, run from inside your working directory).
 
 ## Usage
 
 ```bash
 cd run_matrix
-./run_pyautogmx.sh
+./run_lagmx.sh
 ```
 
 This uses whatever `gmx`, `antechamber` and `python3` are on your PATH and
@@ -105,7 +105,7 @@ build and an NVIDIA GPU is visible, so that `mdrun` fails loudly instead of
 falling back to the CPU -- pass `--require-gpu`:
 
 ```bash
-./run_pyautogmx.sh --require-gpu
+./run_lagmx.sh --require-gpu
 ```
 
 Each `complex_*/` directory must contain:
@@ -115,7 +115,7 @@ Each `complex_*/` directory must contain:
   only if the receptor itself has none and structure curation is enabled)
 
 All simulation options are read from `gmx_config.txt` in the working
-directory you run `pyAutoGMX.py` from -- nothing is hardcoded in the
+directory you run `LAGMX.py` from -- nothing is hardcoded in the
 script. See the comments in
 [`run_matrix/gmx_config.txt`](run_matrix/gmx_config.txt) for every option,
 including:
@@ -137,11 +137,11 @@ templates into it, and put one directory per complex next to them:
 
 ```bash
 mkdir -p ~/my-project && cd ~/my-project
-cp /path/to/pyAutoGMX/run_matrix/gmx_config.txt .
-cp /path/to/pyAutoGMX/run_matrix/*.mdp .
+cp /path/to/LAGMX/run_matrix/gmx_config.txt .
+cp /path/to/LAGMX/run_matrix/*.mdp .
 mkdir complex_egfr
 # ... put your receptor and ligand files in complex_egfr/ ...
-python3 /path/to/pyAutoGMX/pyAutoGMX.py
+python3 /path/to/LAGMX/LAGMX.py
 ```
 
 Every `complex_*/` directory in the working directory is processed in turn,
@@ -165,7 +165,7 @@ Anything that does not match `rec*` or `lig*` is ignored, so a ligand named
 These are requirements of the pipeline, not style preferences:
 
 - **Each ligand copy is its own file.** Three copies of the same compound
-  means three `lig*` files. pyAutoGMX gives each one a distinct
+  means three `lig*` files. LAGMX gives each one a distinct
   moleculetype name; it does not split a single file containing three
   copies.
 - **Ligands must be chemically complete**, hydrogens included. `antechamber`
@@ -175,7 +175,7 @@ These are requirements of the pipeline, not style preferences:
   their SYBYL atom type:
 
   ```bash
-  python3 /path/to/pyAutoGMX/run_matrix/fix_ligand_valence.py lig_mine.mol2
+  python3 /path/to/LAGMX/run_matrix/fix_ligand_valence.py lig_mine.mol2
   ```
 
   Note that `obabel -h` is **not** a safe substitute here: on our test
@@ -249,7 +249,7 @@ visible:
 
 ```bash
 cd run_matrix
-./run_pyautogmx.sh --require-gpu
+./run_lagmx.sh --require-gpu
 ```
 
 ### Getting a CUDA build
@@ -285,7 +285,7 @@ production) on a single RTX 3070, with zero atom-name mismatches and zero
 LINCS warnings across all of them.
 
 `run_matrix/fix_ligand_valence.py` is a standalone repair tool (not called
-by `pyAutoGMX.py` itself) for MOL2 ligand files that are missing an explicit
+by `LAGMX.py` itself) for MOL2 ligand files that are missing an explicit
 hydrogen -- it detects atoms with fewer neighbors than their SYBYL atom type
 requires, completes the missing bond by tetrahedral/trigonal geometry, and
 verifies the result through `antechamber`.
@@ -319,7 +319,7 @@ that is reproducible for any number of ligands and any number of complexes.
 
 ## Citation
 
-If you use pyAutoGMX, please also cite the tools it wraps:
+If you use LAGMX, please also cite the tools it wraps:
 
 - Abraham, M.J. et al. GROMACS. *SoftwareX* 1-2, 19-25 (2015).
 - Wang, J. et al. Development and testing of a general Amber force field.

@@ -424,7 +424,7 @@ quit
         print("DONE")
         os.chdir("..")
 
-CURATION_MARK = "REMARK   pyAutoGMX curated with pdbfixer"
+CURATION_MARK = "REMARK   LAGMX curated with pdbfixer"
 
 def chains_in_pdb(pdb_file):
     """Kumpulkan chain ID yang muncul pada record ATOM sebuah file PDB."""
@@ -739,7 +739,7 @@ if __name__ == "__main__":
     MDRUN_OPTS = config_variables.get('mdrun_options', '')
     fix_structure = config_variables.get('fix_structure', 'no').strip().lower() in ('yes', 'true', '1')
     fixer_python = config_variables.get('fixer_python', sys.executable)
-    # fix_structure.py hidup satu tempat, di sebelah pyAutoGMX.py sendiri --
+    # fix_structure.py hidup satu tempat, di sebelah LAGMX.py sendiri --
     # bukan diduplikasi ke tiap direktori kerja (current_directory bisa jadi
     # run_matrix/ atau folder lain, bukan tempat script ini berada).
     fixer_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fix_structure.py')

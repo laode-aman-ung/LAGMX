@@ -2,14 +2,14 @@
 # ---------------------------------------------------------------------------
 # Melanjutkan produksi MD dari 1 ns -> 5 ns untuk setiap complex_* di run_matrix.
 #
-# TIDAK memanggil pyAutoGMX.py (yang akan menghapus semua hasil 1 ns dan
+# TIDAK memanggil LAGMX.py (yang akan menghapus semua hasil 1 ns dan
 # mengulang seluruh pipeline dari nol). Sebagai gantinya, script ini:
 #   1. Memperpanjang md.tpr yang sudah ada lewat `gmx convert-tpr -extend`
 #      (menambah 4000 ps -> total 5000 ps = 5 ns).
 #   2. Melanjutkan mdrun dari checkpoint (md.cpt) dengan -cpi, sehingga
 #      trajectory (md.xtc/md.edr/md.log) di-APPEND, bukan ditimpa.
 #
-# Jalankan HANYA setelah run_pyautogmx.sh selesai (semua complex_* punya
+# Jalankan HANYA setelah run_lagmx.sh selesai (semua complex_* punya
 # md.gro + md.cpt hasil 1 ns).
 #
 # Pemakaian:
@@ -20,10 +20,10 @@ set -uo pipefail
 cd "$(dirname "$0")"
 
 # Uses whatever gmx is on PATH; activate the environment first, e.g.
-#   conda activate pyautogmx
+#   conda activate lagmx
 if ! command -v gmx >/dev/null 2>&1; then
     echo "GAGAL: 'gmx' tidak ada di PATH." >&2
-    echo "Aktifkan environment-nya dulu: conda activate pyautogmx" >&2
+    echo "Aktifkan environment-nya dulu: conda activate lagmx" >&2
     echo "(lihat ../environment.yml)" >&2
     exit 1
 fi

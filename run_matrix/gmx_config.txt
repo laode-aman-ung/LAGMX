@@ -51,7 +51,7 @@ net_charge: auto
 
 # Optional structure curation with pdbfixer (receptors here are pre-curated)
 # Path to a Python interpreter that has pdbfixer/OpenMM installed. Leave
-# empty to use the interpreter running pyAutoGMX itself. Only consulted when
+# empty to use the interpreter running LAGMX itself. Only consulted when
 # fix_structure is "yes"; see environment.yml for how to create such an env.
 fix_structure: no
 fixer_python:

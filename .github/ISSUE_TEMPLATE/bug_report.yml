@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for trying pyAutoGMX. The fields below are the ones we almost
+        Thanks for trying LAGMX. The fields below are the ones we almost
         always end up asking for, so filling them in now saves a round trip.
 
         If you have not run `./quickstart.sh` yet, please do — it tells us
@@ -17,7 +17,7 @@ body:
       label: What happened
       description: What did you run, what did you expect, and what did you get instead?
       placeholder: |
-        I ran `python3 pyAutoGMX.py` on a complex with two ligands and it
+        I ran `python3 LAGMX.py` on a complex with two ligands and it
         stopped at the topology merging stage with ...
     validations:
       required: true
@@ -51,7 +51,7 @@ body:
     id: config
     attributes:
       label: gmx_config.txt
-      description: The config file from the directory you ran pyAutoGMX in.
+      description: The config file from the directory you ran LAGMX in.
       render: shell
     validations:
       required: true

@@ -1,5 +1,5 @@
 name: Question or usage help
-description: Ask how to do something, or whether pyAutoGMX fits your case
+description: Ask how to do something, or whether LAGMX fits your case
 labels: ["question"]
 body:
   - type: textarea

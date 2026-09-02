@@ -1,4 +1,4 @@
-# Contributing to pyAutoGMX
+# Contributing to LAGMX
 
 Thanks for considering a contribution. This project is a research tool at
 an early (prototype) stage, so the process below is intentionally light.
@@ -33,7 +33,7 @@ Open a GitHub issue and include:
    AmberTools to be installed -- they do **not** run the actual MD
    pipeline, since GitHub-hosted runners don't have GROMACS/AmberTools
    available.
-4. If your change touches pipeline behavior (anything in `pyAutoGMX.py`,
+4. If your change touches pipeline behavior (anything in `LAGMX.py`,
    the `.mdp` templates, or `gmx_config.txt` parsing), also run at least
    one scenario from `run_matrix/` end to end locally, and say what you ran
    and what happened in the pull request description. This is currently
@@ -45,7 +45,7 @@ Open a GitHub issue and include:
 
 ## Adding a test scenario to `run_matrix/`
 
-`pyAutoGMX.py` discovers any `complex_*` directory automatically -- no
+`LAGMX.py` discovers any `complex_*` directory automatically -- no
 registration step needed. To add one:
 
 1. Create `run_matrix/complex_<name>/`.

@@ -35,7 +35,7 @@ INV*.pdf
 .~lock.*
 
 # Run logs / pdbfixer intermediate artifacts (regenerable)
-run_pyautogmx.out
+run_lagmx.out
 *.out
 step*.pdb
 

@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "pyAutoGMX"
+title: "LAGMX"
 abstract: >-
   A single-file, config-driven Python tool that automates the preparation,
   equilibration, and production stages of GROMACS molecular dynamics
@@ -10,8 +10,8 @@ type: software
 version: 1.0.3
 date-released: 2026-09-01
 license: MIT
-repository-code: "https://github.com/laode-aman-ung/pyAutoGMX"
-url: "https://github.com/laode-aman-ung/pyAutoGMX"
+repository-code: "https://github.com/laode-aman-ung/LAGMX"
+url: "https://github.com/laode-aman-ung/LAGMX"
 keywords:
   - molecular dynamics
   - GROMACS

@@ -2,9 +2,9 @@
 """Tambal atom MOL2 yang kehilangan hidrogen (valensi kurang dari yang
 diharapkan tipe SYBYL-nya), lalu verifikasi lewat antechamber acdoctor.
 
-TERPISAH dari pyAutoGMX.py -- ini alat perbaikan DATA ligand, dijalankan
-manual sebelum pyAutoGMX, bukan dipanggil oleh pipeline itu sendiri.
-pyAutoGMX.py tidak diubah sama sekali; begitu file .mol2 lig_* di folder
+TERPISAH dari LAGMX.py -- ini alat perbaikan DATA ligand, dijalankan
+manual sebelum LAGMX, bukan dipanggil oleh pipeline itu sendiri.
+LAGMX.py tidak diubah sama sekali; begitu file .mol2 lig_* di folder
 kompleks sudah benar, gentop_gmx() akan memprosesnya seperti biasa.
 
 Kenapa bukan `obabel -h`: dicoba dulu, tapi obabel gagal mengekulisasi

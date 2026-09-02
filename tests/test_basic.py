@@ -13,7 +13,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PY_FILES = [
-    "pyAutoGMX.py",
+    "LAGMX.py",
     "fix_structure.py",
     "run_matrix/fix_ligand_valence.py",
 ]
@@ -30,22 +30,22 @@ def test_python_files_exist_and_compile():
         subprocess.run([sys.executable, "-m", "py_compile", path], check=True)
 
 
-def test_only_one_copy_of_pyautogmx_exists():
-    # pyAutoGMX.py used to be duplicated into run_matrix/ and the two
+def test_only_one_copy_of_lagmx_exists():
+    # LAGMX.py used to be duplicated into run_matrix/ and the two
     # copies drifted apart during development (one had checkpoint-resume,
     # the other had SEQRES curation, neither had both). There must be
-    # exactly one canonical copy from here on -- run_matrix/run_pyautogmx.sh
-    # invokes it via a relative path (../pyAutoGMX.py) instead of a second
+    # exactly one canonical copy from here on -- run_matrix/run_lagmx.sh
+    # invokes it via a relative path (../LAGMX.py) instead of a second
     # copy living next to the test scenarios.
-    assert os.path.exists(os.path.join(ROOT, "pyAutoGMX.py"))
-    assert not os.path.exists(os.path.join(ROOT, "run_matrix", "pyAutoGMX.py")), (
-        "run_matrix/pyAutoGMX.py should not exist -- there must be exactly "
-        "one copy of the script (repo root); see run_pyautogmx.sh, which "
-        "invokes ../pyAutoGMX.py"
+    assert os.path.exists(os.path.join(ROOT, "LAGMX.py"))
+    assert not os.path.exists(os.path.join(ROOT, "run_matrix", "LAGMX.py")), (
+        "run_matrix/LAGMX.py should not exist -- there must be exactly "
+        "one copy of the script (repo root); see run_lagmx.sh, which "
+        "invokes ../LAGMX.py"
     )
     assert not os.path.exists(os.path.join(ROOT, "run_matrix", "fix_structure.py")), (
         "run_matrix/fix_structure.py should not exist -- fix_structure.py "
-        "is resolved relative to pyAutoGMX.py's own location, not cwd, so "
+        "is resolved relative to LAGMX.py's own location, not cwd, so "
         "it only needs to exist once, at the repo root"
     )
 

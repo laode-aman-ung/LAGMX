@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# pyAutoGMX launcher for the test matrix.
+# LAGMX launcher for the test matrix.
 #
-#   ./run_pyautogmx.sh                 # portable: use whatever gmx is on PATH
-#   ./run_pyautogmx.sh --require-gpu   # refuse to run unless a CUDA GPU is used
+#   ./run_lagmx.sh                 # portable: use whatever gmx is on PATH
+#   ./run_lagmx.sh --require-gpu   # refuse to run unless a CUDA GPU is used
 #
 # By default this runs anywhere: it uses the `gmx`, `antechamber` and `python3`
 # already on your PATH (see ../environment.yml), and lets GROMACS pick the
@@ -49,7 +49,7 @@ if [ "$missing" -ne 0 ]; then
 Some requirements are missing. To install all of them:
 
     conda env create -f ../environment.yml
-    conda activate pyautogmx
+    conda activate lagmx
 
 MSG
     exit 1
@@ -84,12 +84,12 @@ fi
 echo "================================================="
 echo
 
-python3 -u ../pyAutoGMX.py 2>&1 | tee run.log
+python3 -u ../LAGMX.py 2>&1 | tee run.log
 status=${PIPESTATUS[0]}
 
 echo
 echo "=================== SUMMARY ====================="
-echo "pyAutoGMX exit code : $status"
+echo "LAGMX exit code : $status"
 printf '%-16s %-9s %-9s %-9s %-9s %s\n' SYSTEM EM NVT NPT MD XTC
 for d in complex*/; do
     printf '%-16s' "${d%/}"

@@ -1,7 +1,7 @@
-# Conda environment for pyAutoGMX.
+# Conda environment for LAGMX.
 #
 #   conda env create -f environment.yml
-#   conda activate pyautogmx
+#   conda activate lagmx
 #
 # Use mamba instead of conda if you have it; solving this environment with
 # plain conda can take several minutes.
@@ -10,10 +10,10 @@
 # through a SEPARATE interpreter so that OpenMM does not have to share an
 # environment with AmberTools. Create it only if you need that feature:
 #
-#   conda create -n pyautogmx-fixer -c conda-forge python=3.11 pdbfixer openmm
+#   conda create -n lagmx-fixer -c conda-forge python=3.11 pdbfixer openmm
 #
 # then point `fixer_python` in gmx_config.txt at that environment's python.
-name: pyautogmx
+name: lagmx
 channels:
   - conda-forge
   - bioconda

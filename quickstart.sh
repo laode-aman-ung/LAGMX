@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# pyAutoGMX quickstart -- "does this work on my machine?" in a few minutes.
+# LAGMX quickstart -- "does this work on my machine?" in a few minutes.
 #
 #   ./quickstart.sh
 #
@@ -38,7 +38,7 @@ if [ "$fail" -ne 0 ]; then
 Some requirements are missing. The quickest way to get all of them:
 
     conda env create -f environment.yml
-    conda activate pyautogmx
+    conda activate lagmx
 
 MSG
     exit 1
@@ -79,10 +79,10 @@ seqres_reference:
 production_ns: 0.01
 CFG
 
-echo "Running pyAutoGMX in $WORK ..."
+echo "Running LAGMX in $WORK ..."
 echo
 cd "$WORK"
-python3 -u "$ROOT/pyAutoGMX.py" 2>&1 | tee quickstart.log
+python3 -u "$ROOT/LAGMX.py" 2>&1 | tee quickstart.log
 status=${PIPESTATUS[0]}
 
 echo
@@ -96,12 +96,12 @@ done
 echo
 echo
 if [ "$status" -eq 0 ] && [ "$missing" -eq 0 ]; then
-    echo "PASS -- pyAutoGMX ran the full pipeline on this machine."
+    echo "PASS -- LAGMX ran the full pipeline on this machine."
     echo "Next: see README.md, and use run_matrix/ for real simulations."
 else
     echo "FAIL -- exit code $status. See $WORK/quickstart.log for the error."
     echo "If you think this is a bug, please open an issue and attach that log:"
-    echo "  https://github.com/laode-aman-ung/pyAutoGMX/issues"
+    echo "  https://github.com/laode-aman-ung/LAGMX/issues"
 fi
 echo "================================================="
 exit "$status"
