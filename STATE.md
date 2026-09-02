@@ -67,9 +67,13 @@ kini ada** di `paper.md`, bersama Validation dan Limitations.
 
 ## Langkah berikutnya
 
-1. Buat rilis yang menandai penggantian nama, lalu selaraskan `version` dan
-   `date-released` di `CITATION.cff`. Saat ini masih `1.0.3` / `2026-09-01`,
-   yaitu rilis terakhir dengan nama lama.
+1. Buat rilis **v1.1.0** yang menandai penggantian nama. `CITATION.cff` sudah
+   disiapkan di `1.1.0` / `2026-09-02`; tinggal tag dan rilisnya dibuat agar
+   metadata sitasi menunjuk rilis yang benar-benar ada.
+
+   ```bash
+   gh release create v1.1.0 --title "LAGMX 1.1.0" --notes "..."
+   ```
 2. Jalankan poin 1–4 di atas secara bertahap sepanjang enam bulan ini.
 3. Menjelang Februari 2027: buat arsip Zenodo, lalu ajukan ulang.
 
