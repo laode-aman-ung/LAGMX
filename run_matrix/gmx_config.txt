@@ -74,3 +74,58 @@ seqres_reference:
 #   - Kosongkan value ini untuk kembali ke perilaku lama (pakai nsteps
 #     bawaan md.mdp, selalu mulai dari 0 ns).
 production_ns: 5
+
+# ---------------------------------------------------------------------------
+# Analisis pasca-produksi (analyze_md.py)
+#
+# Dibaca hanya oleh analyze_md.py; LAGMX.py mengabaikannya. Seluruh key di
+# bawah ini opsional — config lama tanpa key ini tetap jalan dengan nilai
+# bawaan yang sama seperti tertulis di sini.
+#
+#   cd run_matrix && python3 ../analyze_md.py
+# ---------------------------------------------------------------------------
+
+# Analisis yang dijalankan, dipisah koma. "all" menjalankan semuanya
+# termasuk mmpbsa. Pilihan:
+#   rmsd      stabilitas kompleks (backbone protein dan ligan terpisah)
+#   rmsf      fleksibilitas per residu
+#   rg        kompaktibilitas protein
+#   sasa      luas permukaan protein, ligan, kompleks, dan area terkubur
+#   hbond     ikatan hidrogen protein-ligan sepanjang lintasan
+#   contacts  okupansi kontak per residu -> residu kunci
+#   pca       gerakan global, proyeksi PC1/PC2
+#   fel       free energy landscape di atas proyeksi PCA
+#   mmpbsa    energi bebas ikatan lewat gmx_MMPBSA (butuh mmpbsa_python)
+analysis: rmsd,rmsf,rg,sasa,hbond,contacts,pca,fel
+
+# Berapa nanodetik pertama dibuang sebelum analisis. Awal produksi masih
+# memuat relaksasi sisa dari ekuilibrasi; memasukkannya menggeser rerata RMSD
+# dan mengaburkan plateau. Nol berarti seluruh lintasan dipakai.
+analysis_skip_ns: 0
+
+# Ambang kontak protein-ligan dalam nm. 0.4 nm adalah konvensi yang lazim
+# dipakai untuk kontak non-ikatan.
+analysis_contact_cutoff: 0.4
+
+# gmx mana yang dipakai untuk analisis. Boleh berbeda dari gmx yang dipakai
+# menjalankan simulasi — analisis tidak butuh GPU, jadi build apa pun cukup.
+analysis_gmx: gmx
+
+# gmx_MMPBSA hidup di environment terpisah karena menarik AmberTools versi
+# sendiri. Isi dengan salah satu dari: prefix environment conda, interpreter
+# python di dalamnya, atau path langsung ke executable gmx_MMPBSA. Dikosongkan
+# berarti analisis mmpbsa dilewati, bahkan bila diminta di key `analysis`.
+mmpbsa_python:
+
+# gb, pb, atau both. MM/GBSA jauh lebih murah dan biasanya cukup untuk
+# memeringkat ligan; MM/PBSA lebih mahal dan lebih tepat secara absolut.
+mmpbsa_method: gb
+
+# Jumlah frame yang disampling dari lintasan produksi. Interval dihitung
+# otomatis dari panjang lintasan, jadi angka ini tidak perlu diubah saat
+# production_ns berubah.
+mmpbsa_frames: 100
+
+# Model Generalized Born (igb) dan konsentrasi garam dalam M.
+mmpbsa_igb: 5
+mmpbsa_salt: 0.150

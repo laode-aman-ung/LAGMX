@@ -77,8 +77,8 @@ fails, the log it points you at is what to attach to an issue.
 ## Repository layout
 
 There is exactly **one** copy of the tool: [`LAGMX.py`](LAGMX.py)
-(and its companion [`fix_structure.py`](fix_structure.py)) at the repo
-root. Everything else it needs -- `gmx_config.txt`, the `.mdp` templates,
+(and its companions [`fix_structure.py`](fix_structure.py) and
+[`analyze_md.py`](analyze_md.py)) at the repo root. Everything else it needs -- `gmx_config.txt`, the `.mdp` templates,
 and the `complex_*/` directories it processes -- is read relative to
 whatever directory you run it *from*, not relative to where the script
 lives. [`run_matrix/`](run_matrix/) is the one maintained, runnable example
@@ -128,6 +128,51 @@ including:
   selection)
 - `fix_structure` / `fixer_python` / `seqres_reference` -- optional
   structure curation
+
+## Post-production analysis
+
+LAGMX takes a system from PDB to a finished production trajectory. Reading
+that trajectory used to be a fresh round of hand-typed `gmx rms`, `gmx sasa`
+and `gmx covar` calls, each with its own interactive group prompts and its own
+chance of fitting on the wrong group. [`analyze_md.py`](analyze_md.py) runs the
+standard battery over every finished `complex_*/` and reduces each one to a row
+of comparable numbers.
+
+```bash
+cd run_matrix && python3 ../analyze_md.py
+```
+
+Like `LAGMX.py`, it reads `gmx_config.txt`, the `.mdp` files and the
+`complex_*/` directories from the directory you run it *from*.
+
+| Analysis | Question it answers |
+|---|---|
+| `rmsd` | Is the complex stable? Protein backbone and ligand are reported separately, the ligand fitted on the protein so that drift out of the pocket shows up instead of being fitted away |
+| `rmsf` | Which residues move, per residue |
+| `rg` | Does the protein stay compact |
+| `sasa` | Protein, ligand and complex surface, plus the buried area between them |
+| `hbond` | Protein-ligand hydrogen bonds over time |
+| `contacts` | Which residues touch the ligand, and in what fraction of frames |
+| `pca` | Global motion: covariance of C-alpha, projected on PC1/PC2 |
+| `fel` | Free energy landscape over that projection |
+| `mmpbsa` | Binding free energy through `gmx_MMPBSA` (MM/GBSA by default) |
+
+Every analysis writes a `.csv` and a `.png` into `complex_*/analysis/`, plus a
+`summary.csv` per complex and one `analysis_summary.csv` at the top level
+comparing all of them. A failing analysis is reported and skipped rather than
+taking the other eight down with it.
+
+Before anything is measured the trajectory is corrected for periodic boundary
+artefacts in three passes -- `-pbc whole`, then `-pbc nojump`, then centring
+with `-pbc mol -ur compact`. Skipping that is the classic way to get an RMSD
+trace with a cliff in it that looks like unbinding and is really the ligand
+crossing the box edge.
+
+Configuration lives in the same `gmx_config.txt` as the simulation settings;
+see the block at the end of [`run_matrix/gmx_config.txt`](run_matrix/gmx_config.txt).
+All of its keys are optional, so an existing config file keeps working
+untouched. `mmpbsa` additionally needs `mmpbsa_python` pointing at an
+environment that has `gmx_MMPBSA`, and is skipped when that is empty.
 
 ## Preparing your own system
 

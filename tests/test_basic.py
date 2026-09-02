@@ -15,6 +15,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY_FILES = [
     "LAGMX.py",
     "fix_structure.py",
+    "analyze_md.py",
     "run_matrix/fix_ligand_valence.py",
 ]
 
@@ -63,6 +64,19 @@ def test_run_matrix_scenarios_have_inputs():
         lig = glob.glob(os.path.join(p, "lig*.pdb")) + glob.glob(os.path.join(p, "lig*.mol2"))
         assert rec, f"{d}: no receptor file (rec*.pdb)"
         assert lig, f"{d}: no ligand file (lig*.pdb / lig*.mol2)"
+
+
+def test_gmx_config_has_analysis_keys():
+    # analyze_md.py reads its settings from the same gmx_config.txt as the
+    # simulation. Every one of them is optional at runtime, but the worked
+    # example has to document them or nobody discovers the feature exists.
+    required = ["analysis", "analysis_skip_ns", "analysis_contact_cutoff",
+                "mmpbsa_method", "mmpbsa_frames"]
+    path = os.path.join(ROOT, "run_matrix", "gmx_config.txt")
+    with open(path) as f:
+        text = f.read()
+    for key in required:
+        assert f"{key}:" in text, f"run_matrix/gmx_config.txt: missing '{key}'"
 
 
 def test_gmx_config_has_required_keys():
@@ -116,3 +130,71 @@ GASTEIGER
     atom_id, deficit = result
     assert atom_id == 1
     assert deficit == 1
+
+
+def _load_analyze_md():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "analyze_md", os.path.join(ROOT, "analyze_md.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_read_xvg_parses_data_and_legends(tmp_path):
+    xvg = tmp_path / "rmsd.xvg"
+    xvg.write_text(
+        '# comment\n'
+        '@    title "RMSD"\n'
+        '@    xaxis  label "Time (ns)"\n'
+        '@    yaxis  label "RMSD (nm)"\n'
+        '@ s0 legend "Backbone"\n'
+        '0.000    0.100\n'
+        '1.000    0.150\n'
+        '2.000    0.200\n'
+    )
+    am = _load_analyze_md()
+    data, meta = am.read_xvg(str(xvg))
+    assert data.shape == (3, 2)
+    assert meta["legends"] == ["Backbone"]
+    assert meta["xlabel"] == "Time (ns)"
+    assert abs(float(data[2, 1]) - 0.2) < 1e-9
+
+
+def test_read_xpm_decodes_values_from_the_comment(tmp_path):
+    # gmx sham hides the kJ/mol value of each colour in the C comment after
+    # the colour definition, not inside the quoted colour string. Reading the
+    # quoted part instead returns a matrix of NaN that still plots, still
+    # writes a CSV, and is entirely meaningless.
+    xpm = tmp_path / "gibbs.xpm"
+    xpm.write_text(
+        '/* XPM */\n'
+        '/* title:   "Gibbs Energy Landscape" */\n'
+        'static char *gromacs_xpm[] = {\n'
+        '"3 2   2 1",\n'
+        '"A  c #000000 " /* "0" */,\n'
+        '"B  c #FFFFFF " /* "12.5" */,\n'
+        '/* x-axis: 1 2 3 */\n'
+        '/* y-axis: 1 2 */\n'
+        '"ABA",\n'
+        '"BBB"\n'
+        '};\n'
+    )
+    am = _load_analyze_md()
+    values, xaxis, yaxis = am.read_xpm(str(xpm))
+    assert values is not None, "XPM must decode, not come back as None"
+    assert values.shape == (2, 3)
+    # Rows are flipped: XPM runs top to bottom, the y axis bottom to top.
+    assert list(values[0]) == [12.5, 12.5, 12.5]
+    assert list(values[1]) == [0.0, 12.5, 0.0]
+    assert list(xaxis) == [1.0, 2.0, 3.0]
+    assert list(yaxis) == [1.0, 2.0]
+
+
+def test_analysis_defaults_cover_every_named_analysis():
+    am = _load_analyze_md()
+    for name in am.ALL_ANALYSES:
+        assert name in am.ANALYSIS_FUNCS, f"{name} has no implementation"
+    # The default list must be runnable without extra setup, so mmpbsa -- which
+    # needs its own conda environment -- stays opt-in.
+    assert "mmpbsa" not in am.ANALYSIS_DEFAULTS["analysis"].split(",")
