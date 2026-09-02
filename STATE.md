@@ -19,7 +19,27 @@ Penggantian nama `pyAutoGMX` → **LAGMX** selesai dan terdorong. Repo bersih.
 - Ditambahkan berkas wajib sinkronisasi: `CLAUDE.md`, `STATE.md`,
   `.gitattributes`.
 
-## JOSS — ditolak 27 Agustus 2026, paling cepat diajukan ulang 24 Februari 2027
+## JOSS — diajukan ulang 2 September 2026
+
+**Status: submitted, review belum dimulai.**
+https://joss.theoj.org/papers/b5d7f43007f1198a2e40430e524621a1
+
+Diajukan sebagai *Resubmission* dari #11216, versi **v1.1.0**, subjek
+Computational chemistry. Catatan untuk editor (2.973 karakter) memuat keenam
+tautan repo pendahulu, argumen bahwa tanggal pembuatan repo adalah metadata
+sisi server, tabel perbandingan urutan perintah `gmx` antara skrip 2023 dan
+`LAGMX.py`, serta pengakuan terbuka atas kelemahannya: keenam repo diunggah
+sekali, ada jeda 2023–2026, dan LAGMX adalah tulis ulang.
+
+**Yang perlu dikerjakan begitu issue review muncul** di
+`openjournals/joss-reviews`: tempel komentar berformat Markdown agar tabel
+perbandingan terbaca sebagai tabel — di kolom Notes to editor ia terlipat jadi
+satu paragraf. Draf ada di `~/riset/_arsip/lagmx-joss-resubmission-comment.md`.
+
+Bila ditolak lagi, tanggal paling cepat berikutnya tetap **24 Februari 2027**
+(enam bulan sejak commit pertama 26 Agustus 2026).
+
+## Riwayat penolakan pertama — 27 Agustus 2026
 
 Pengajuan sebagai pyAutoGMX (issue #11216) **ditolak oleh AEiC Rachel
 Kurchin**, bukan karena galat teknis:
