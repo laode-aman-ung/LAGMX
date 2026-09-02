@@ -31,10 +31,17 @@ sisi server, tabel perbandingan urutan perintah `gmx` antara skrip 2023 dan
 `LAGMX.py`, serta pengakuan terbuka atas kelemahannya: keenam repo diunggah
 sekali, ada jeda 2023–2026, dan LAGMX adalah tulis ulang.
 
-**Yang perlu dikerjakan begitu issue review muncul** di
-`openjournals/joss-reviews`: tempel komentar berformat Markdown agar tabel
-perbandingan terbaca sebagai tabel — di kolom Notes to editor ia terlipat jadi
-satu paragraf. Draf ada di `~/riset/_arsip/lagmx-joss-resubmission-comment.md`.
+**Menunggu triase.** Email konfirmasi JOSS menyatakan naskah menunggu triase
+managing editor — *"generally takes up to a week, but during busy times can
+take a number of weeks"* — dan sampai lolos desk check, naskah **tidak muncul**
+di `openjournals/joss-reviews`. Jadi tidak ada yang bisa dipantau; pemberitahuan
+datang lewat email `[PRE REVIEW]` dari GitHub.
+
+**Begitu issue muncul**, tempel komentar dari
+`~/riset/_arsip/lagmx-joss-review-comment.md`. Itu bukan sekadar merapikan
+format: isi *Notes to editor* tidak ikut tampil di badan issue publik — pada
+#11216 issue-nya hanya memuat metadata — sehingga seluruh argumen silsilah
+hanya terlihat di panel admin editor sampai komentar itu ditempel.
 
 Bila ditolak lagi, tanggal paling cepat berikutnya tetap **24 Februari 2027**
 (enam bulan sejak commit pertama 26 Agustus 2026).
