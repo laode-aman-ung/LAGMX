@@ -582,10 +582,41 @@ def ionization(solv_gro, topol_top, ions_gro):
         print(f"Error occurred during ionization execution: {e}")
         raise
 
+def minimization_opts(opts):
+    """Drop the mdrun offload flags energy minimisation cannot accept.
+
+    `mdrun_options` is one string applied to every stage, but PME and bonded
+    offload are only implemented for dynamical integrators. Handing a working
+    GPU line like "-nb gpu -pme gpu -bonded gpu" to `integrator = steep` stops
+    the run dead:
+
+        Cannot compute PME interactions on a GPU, because:
+          PME GPU does not support: Non-dynamical integrator (use md, sd, etc).
+
+    Non-bonded offload is fine for minimisation and is kept; -pme, -bonded and
+    -update are stripped along with their gpu/cpu/auto argument.
+    """
+    dropped = {"-pme", "-bonded", "-update"}
+    tokens, out, skip = opts.split(), [], False
+    for token in tokens:
+        if skip:
+            skip = False
+            continue
+        if token in dropped:
+            skip = True                 # also swallow its value
+            continue
+        out.append(token)
+    return " ".join(out)
+
+
 def minimization(ions_gro, topol_top):
     try:
         subprocess.run(f"gmx grompp -f em.mdp -c {ions_gro} -p {topol_top} -o em.tpr -maxwarn 1", shell=True, check=True)
-        subprocess.run(f"gmx mdrun -v -deffnm em {MDRUN_OPTS}", shell=True, check=True)
+        em_opts = minimization_opts(MDRUN_OPTS)
+        if em_opts != MDRUN_OPTS:
+            print(f"Minimisation: dropped offload flags unsupported by a "
+                  f"non-dynamical integrator -> '{em_opts}'")
+        subprocess.run(f"gmx mdrun -v -deffnm em {em_opts}", shell=True, check=True)
         subprocess.run(f'echo "10\n0\n" | gmx energy -f em.edr -o potential.xvg', shell=True, check=True)    
     except subprocess.CalledProcessError as e:
         print(f"Error occurred during minimization execution: {e}")
